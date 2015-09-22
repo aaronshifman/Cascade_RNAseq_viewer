@@ -9,6 +9,7 @@ var pathIds = [];
 var currentPath;
 var pathNames = []
 var swap = false
+var defName = []
 $.get("getPaths.php", function(data) {
     var tableRows = []
 
@@ -30,6 +31,26 @@ $.get("getPaths.php", function(data) {
         "bLengthChange": false,
         "fnInitComplete": function() {
             $("#example").css("width", '')
+            oT2 = $("#example").dataTable();
+            $(oT2.fnGetNodes()[defaultPath-1]).addClass("dataTable_selected");
+            defName = $(oT2.fnGetNodes()[defaultPath-1]).children().first().html()
+            
+            loadPathwayFromDB(defaultPath);
+                string = ""
+                if(defaultPath-1 >0){
+                    string +="<input type='button' class='pathway_scroll' onclick='load_left()' value='&#8592;'/>";
+                }
+                string += defName
+                if(defaultPath-1 < pathNames.length){
+                    string +="<input type='button' class='pathway_scroll' onclick ='load_right()' value='&#8594;'/>"
+                }
+                        $("#pathway_title").html(string)
+                        ANYTHING_LOADED = true;
+                        openNodes = [];
+                        currentPath = defaultPath-1;
+                        makeScrollButton();
+     
+                
         }
     })
 })

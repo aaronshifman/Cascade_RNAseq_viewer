@@ -90,7 +90,6 @@ function loadPatientsFromDB(reload) {
         source: $("input[name='data_source']:checked").attr("id")
     }
     $.post('load_patient_IRIC.php', obj, function(data) {
-        console.log(data)
         parsePatients(data, 1, reload)
     });
 }

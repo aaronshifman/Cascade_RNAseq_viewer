@@ -52,7 +52,7 @@ require_once('config.php')
             <input class="header-right" type="button" value="Modify Ranges" onclick="modify_range();"/>   
             <input class ="header-right" type="button" id="circle_toggle"value="Disable Levels" onclick="toggle_circles();"/>
 <!--            <input class ="header-right" type="button" id="sel_sec_expr"value="Select Comparison" onclick="sel_comp();"/>-->
-            <input type="button" value ='Generate Image' onclick='print_view();'/>
+<!--            <input type="button" value ='Generate Image' onclick='print_view();'/>-->
             <input class="header-right" type="button" value="View documentation" onclick="window.open('http://www.bioinfo.iric.ca/~wilhelmb/cas/Cascade intro.pdf')"/><br/>
         </div>
         <div class='header title'>
@@ -61,6 +61,7 @@ require_once('config.php')
         <?php include_once 'ssm.php'; ?> <!--load the menu -->
         <div class="contents" style="-webkit-transform-origin: 0px 50%; -webkit-transition: all 0.5s ease; transition: all 0.5s ease;"> 
             <script>
+                var widthOffset = 0;
                         var defaultPath = <?php echo $_GET['path']; ?>;
                         var defaultData = <?php echo $_GET['data']; ?>;
                         $(document).ready(function () {
@@ -561,7 +562,7 @@ require_once('config.php')
                 function onDocumentMouseMove(event) {
                 if (!SCROLLING) {
                 if (mouseDown[2]) {
-                if (event.clientX - xPosMouse < - 200) {
+                if ((event.clientX - widthOffset) - xPosMouse < - 200) {
                 if (parseInt(currentPath) > 0) {
                 currentPath = parseInt(currentPath) - 1;
                         loadPathwayFromDB(pathIds[currentPath])
@@ -578,7 +579,7 @@ require_once('config.php')
                 }
                 }
 
-                else if (event.clientX - xPosMouse > 200) {
+                else if ((event.clientX - widthOffset) - xPosMouse > 200) {
                 if (parseInt(currentPath) < pathIds.length - 1) {
                 currentPath = parseInt(currentPath) + 1;
                         loadPathwayFromDB(pathIds[currentPath])
@@ -600,7 +601,7 @@ require_once('config.php')
                 // update sprite position
                 sprite1.position.set(event.clientX, event.clientY, 0);
                         // update the mouse variable
-                        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+                        mouse.x = ((event.clientX - widthOffset) / window.innerWidth) * 2 - 1;
                         mouse.y = - ((event.clientY - heightOffset) / (window.innerHeight)) * 2 + 1; //corrected mouse position for the shifted canvas (header height)
                 }
                 }
@@ -611,7 +612,7 @@ require_once('config.php')
                  * @param {type} event DOM event
                  */
                 function onClick(event) {
-                var vector = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1, - ((event.clientY - heightOffset) / window.innerHeight) * 2 + 1, 0.5); //get a unit vector between the camera and the mouse
+                var vector = new THREE.Vector3(((event.clientX - widthOffset) / window.innerWidth) * 2 - 1, - ((event.clientY - heightOffset) / window.innerHeight) * 2 + 1, 0.5); //get a unit vector between the camera and the mouse
                         projector.unprojectVector(vector, camera);
                         var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
                         tmpNodes = [];

@@ -1,7 +1,7 @@
 #Cascade
 
 Welcome to Cascade, an intuitive tool for browsing RNASeq Data
-
+For a demo of Cascade with some real data - check out http://binsrv2.iric.ca/~shifmana/Cascade/
 ##Installation
 
 1. Clone this repository into your web root

@@ -1,53 +1,799 @@
 /*!
- * meny 1.2
+ * meny 1.4
  * http://lab.hakim.se/meny
  * MIT licensed
  *
  * Created by Hakim El Hattab (http://hakim.se, @hakimel)
  */
-var Meny={create:function(a){return(function(){if(!a||!a.menuElement||!a.contentsElement){throw"You need to specify which menu and contents elements to use.";
-}if(a.menuElement.parentNode!==a.contentsElement.parentNode){throw"The menu and contents elements must have the same parent.";}var J="top",K="right",c="bottom",N="left";
-var F="WebkitPerspective" in document.body.style||"MozPerspective" in document.body.style||"msPerspective" in document.body.style||"OPerspective" in document.body.style||"perspective" in document.body.style;
-var D={width:300,height:300,position:N,threshold:40,overlap:6,transitionDuration:"0.5s",transitionEasing:"ease"};var e={menu:a.menuElement,contents:a.contentsElement,wrapper:a.menuElement.parentNode,cover:null};
-var A=e.wrapper.offsetLeft,z=e.wrapper.offsetTop,t=null,r=null,q=null,o=null,f=false,m=false;var l,j,G,n,O,V,S,x,d,B;var w,y,E;Meny.extend(D,a);i();g();
-v();C();Q();R();function i(){G="";S="";switch(D.position){case J:l="50% 0%";j="rotateX( 30deg ) translateY( -100% ) translateY( "+D.overlap+"px )";V="50% 0";
-x="translateY( "+D.height+"px ) rotateX( -15deg )";n={top:"-"+(D.height-D.overlap)+"px"};O={top:"0px"};d={top:"0px"};B={top:D.height+"px"};break;case K:l="100% 50%";
-j="rotateY( 30deg ) translateX( 100% ) translateX( -2px ) scale( 1.01 )";V="100% 50%";x="translateX( -"+D.width+"px ) rotateY( -15deg )";n={right:"-"+(D.width-D.overlap)+"px"};
-O={right:"0px"};d={left:"0px"};B={left:"-"+D.width+"px"};break;case c:l="50% 100%";j="rotateX( -30deg ) translateY( 100% ) translateY( -"+D.overlap+"px )";
-V="50% 100%";x="translateY( -"+D.height+"px ) rotateX( 15deg )";n={bottom:"-"+(D.height-D.overlap)+"px"};O={bottom:"0px"};d={top:"0px"};B={top:"-"+D.height+"px"};
-break;default:l="100% 50%";j="translateX( -100% ) translateX( "+D.overlap+"px ) scale( 1.01 ) rotateY( -30deg )";V="0 50%";x="translateX( "+D.width+"px ) rotateY( 15deg )";
-n={left:"-"+(D.width-D.overlap)+"px"};O={left:"0px"};d={left:"0px"};B={left:D.width+"px"};break;}}function g(){Meny.addClass(e.wrapper,"meny-"+D.position);
-e.wrapper.style[Meny.prefix("perspective")]="800px";e.wrapper.style[Meny.prefix("perspectiveOrigin")]=V;}function v(){e.cover=document.createElement("div");
-e.cover.style.position="absolute";e.cover.style.display="block";e.cover.style.width="100%";e.cover.style.height="100%";e.cover.style.left=0;e.cover.style.top=0;
-e.cover.style.zIndex=1000;e.cover.style.visibility="hidden";e.cover.style.opacity=0;try{e.cover.style.background="rgba( 0, 0, 0, 0.4 )";e.cover.style.background="-ms-linear-gradient("+D.position+", rgba(0,0,0,0.20) 0%,rgba(0,0,0,0.65) 100%)";
-e.cover.style.background="-moz-linear-gradient("+D.position+", rgba(0,0,0,0.20) 0%,rgba(0,0,0,0.65) 100%)";e.cover.style.background="-webkit-linear-gradient("+D.position+", rgba(0,0,0,0.20) 0%,rgba(0,0,0,0.65) 100%)";
-}catch(W){}if(F){e.cover.style[Meny.prefix("transition")]="all "+D.transitionDuration+" "+D.transitionEasing;}e.contents.appendChild(e.cover);}function C(){var W=e.menu.style;
-switch(D.position){case J:W.width="100%";W.height=D.height+"px";break;case K:W.right="0";W.width=D.width+"px";W.height="100%";break;case c:W.bottom="0";
-W.width="100%";W.height=D.height+"px";break;case N:W.width=D.width+"px";W.height="100%";break;}W.position="fixed";W.display="block";W.zIndex=1;if(F){W[Meny.prefix("transform")]=j;
-W[Meny.prefix("transformOrigin")]=l;W[Meny.prefix("transition")]="all "+D.transitionDuration+" "+D.transitionEasing;}else{Meny.extend(W,n);}}function Q(){var W=e.contents.style;
-if(F){W[Meny.prefix("transform")]=S;W[Meny.prefix("transformOrigin")]=V;W[Meny.prefix("transition")]="all "+D.transitionDuration+" "+D.transitionEasing;
-}else{W.position=W.position.match(/relative|absolute|fixed/gi)?W.position:"relative";Meny.extend(W,d);}}function R(){if("ontouchstart" in window){Meny.bindEvent(document,"touchstart",L);
-Meny.bindEvent(document,"touchend",H);}else{Meny.bindEvent(document,"mousedown",M);Meny.bindEvent(document,"mouseup",U);Meny.bindEvent(document,"mousemove",b);
-}}function u(){if(!f){f=true;Meny.addClass(e.wrapper,"meny-active");e.cover.style.height=e.contents.scrollHeight+"px";e.cover.style.visibility="visible";
-if(F){e.cover.style.opacity=1;e.contents.style[Meny.prefix("transform")]=x;e.menu.style[Meny.prefix("transform")]=G;}else{w&&w.stop();w=Meny.animate(e.menu,O,500);
-y&&y.stop();y=Meny.animate(e.contents,B,500);E&&E.stop();E=Meny.animate(e.cover,{opacity:1},500);}Meny.dispatchEvent(e.menu,"open");}}function I(){if(f){f=false;
-Meny.removeClass(e.wrapper,"meny-active");if(F){e.cover.style.visibility="hidden";e.cover.style.opacity=0;e.contents.style[Meny.prefix("transform")]=S;
-e.menu.style[Meny.prefix("transform")]=j;}else{w&&w.stop();w=Meny.animate(e.menu,n,500);y&&y.stop();y=Meny.animate(e.contents,d,500);E&&E.stop();E=Meny.animate(e.cover,{opacity:0},500,function(){e.cover.style.visibility="hidden";
-});}Meny.dispatchEvent(e.menu,"close");}}function M(W){m=true;}function b(Z){if(!m){var W=Z.clientX-A,aa=Z.clientY-z;switch(D.position){case J:if(aa>D.height){I();
-}else{if(aa<D.threshold){u();}}break;case K:var X=e.wrapper.offsetWidth;if(W<X-D.width){I();}else{if(W>X-D.threshold){u();}}break;case c:var Y=e.wrapper.offsetHeight;
-if(aa<Y-D.height){I();}else{if(aa>Y-D.threshold){u();}}break;case N:if(W>D.width){I();}else{if(W<D.threshold){u();}}break;}}}function U(W){m=false;}function L(W){t=W.touches[0].clientX-A;
-r=W.touches[0].clientY-z;q=null;o=null;Meny.bindEvent(document,"touchmove",P);}function P(X){q=X.touches[0].clientX-A;o=X.touches[0].clientY-z;var W=null;
-if(Math.abs(q-t)>Math.abs(o-r)){if(q<t-D.threshold){W=T;}else{if(q>t+D.threshold){W=p;}}}else{if(o<r-D.threshold){W=s;}else{if(o>r+D.threshold){W=h;}}}if(W&&W()){X.preventDefault();
-}}function H(W){Meny.unbindEvent(document,"touchmove",P);if(q===null&&o===null){k();}}function k(){var W=(D.position===J&&r>D.height)||(D.position===K&&t<e.wrapper.offsetWidth-D.width)||(D.position===c&&r<e.wrapper.offsetHeight-D.height)||(D.position===N&&t<D.width);
-if(W){I();}}function p(){if(D.position===K&&f){I();return true;}else{if(D.position===N&&!f){u();return true;}}}function T(){if(D.position===K&&!f){u();
-return true;}else{if(D.position===N&&f){I();return true;}}}function h(){if(D.position===c&&f){I();return true;}else{if(D.position===J&&!f){u();return true;
-}}}function s(){if(D.position===c&&!f){u();return true;}else{if(D.position===J&&f){I();return true;}}}return{open:u,close:I,isOpen:function(){return f;
-},addEventListener:function(W,X){e.menu&&Meny.bindEvent(e.menu,W,X);},removeEventListener:function(W,X){e.menu&&Meny.unbindEvent(e.menu,W,X);}};})();},animate:function(b,a,c,d){return(function(){var g={};
-for(var j in a){g[j]={start:parseFloat(b.style[j])||0,end:parseFloat(a[j]),unit:(typeof a[j]==="string"&&a[j].match(/px|em|%/gi))?a[j].match(/px|em|%/gi)[0]:""};
-}var i=Date.now(),e;function h(){var k=1-Math.pow(1-((Date.now()-i)/c),5);for(var m in g){var l=g[m];b.style[m]=l.start+((l.end-l.start)*k)+l.unit;}if(k<1){e=setTimeout(h,1000/60);
-}else{d&&d();f();}}function f(){clearTimeout(e);}h();return{stop:f};})();},extend:function(d,c){for(var e in c){d[e]=c[e];}},prefix:function(e,d){var b=e.slice(0,1).toUpperCase()+e.slice(1),g=["Webkit","Moz","O","ms"];
-for(var c=0,a=g.length;c<a;c++){var f=g[c];if(typeof(d||document.body).style[f+b]!=="undefined"){return f+b;}}return e;},addClass:function(b,a){b.className=b.className.replace(/\s+$/gi,"")+" "+a;
-},removeClass:function(b,a){b.className=b.className.replace(a,"");},bindEvent:function(a,c,b){if(a.addEventListener){a.addEventListener(c,b,false);}else{a.attachEvent("on"+c,b);
-}},unbindEvent:function(a,c,b){if(a.removeEventListener){a.removeEventListener(c,b,false);}else{a.detachEvent("on"+c,b);}},dispatchEvent:function(b,c,a){if(b){var d=document.createEvent("HTMLEvents",1,2);
-d.initEvent(c,true,true);Meny.extend(d,a);b.dispatchEvent(d);}},getQuery:function(){var a={};location.search.replace(/[A-Z0-9]+?=([\w|:|\/\.]*)/gi,function(b){a[b.split("=").shift()]=b.split("=").pop();
-});return a;}};if(typeof Date.now!=="function"){Date.now=function(){return new Date().getTime();};}
+
+(function( root, factory ) {
+    if( typeof define === 'function' && define.amd ) {
+        // AMD module
+        define( factory );
+    } else {
+        // Browser global
+        root.Meny = factory();
+    }
+}(this, function () {
+
+// Date.now polyfill
+if( typeof Date.now !== 'function' ) Date.now = function() { return new Date().getTime(); };
+
+var Meny = {
+
+	// Creates a new instance of Meny
+	create: function( options ) {
+		return (function(){
+
+			// Make sure the required arguments are defined
+			if( !options || !options.menuElement || !options.contentsElement ) {
+				throw 'You need to specify which menu and contents elements to use.';
+			}
+
+			// Make sure the menu and contents have the same parent
+			if( options.menuElement.parentNode !== options.contentsElement.parentNode ) {
+				throw 'The menu and contents elements must have the same parent.';
+			}
+
+			// Constants
+			var POSITION_T = 'top',
+				POSITION_R = 'right',
+				POSITION_B = 'bottom',
+				POSITION_L = 'left';
+
+			// Feature detection for 3D transforms
+			var supports3DTransforms =  'WebkitPerspective' in document.body.style ||
+										'MozPerspective' in document.body.style ||
+										'msPerspective' in document.body.style ||
+										'OPerspective' in document.body.style ||
+										'perspective' in document.body.style;
+
+			// Default options, gets extended by passed in arguments
+			var config = {
+				width: 300,
+				height: 300,
+				position: POSITION_L,
+				threshold: 40,
+				angle: 30,
+				overlap: 6,
+				transitionDuration: '0.5s',
+				transitionEasing: 'ease',
+				gradient: 'rgba(0,0,0,0.20) 0%, rgba(0,0,0,0.65) 100%)',
+				mouse: true,
+				touch: true
+			};
+
+			// Cache references to DOM elements
+			var dom = {
+				menu: options.menuElement,
+				contents: options.contentsElement,
+				wrapper: options.menuElement.parentNode,
+				cover: null
+			};
+
+			// State and input
+			var indentX = dom.wrapper.offsetLeft,
+				indentY = dom.wrapper.offsetTop,
+				touchStartX = null,
+				touchStartY = null,
+				touchMoveX = null,
+				touchMoveY = null,
+				isOpen = false,
+				isMouseDown = false;
+
+			// Precalculated transform and style states
+			var menuTransformOrigin,
+				menuTransformClosed,
+				menuTransformOpened,
+				menuStyleClosed,
+				menuStyleOpened,
+
+				contentsTransformOrigin,
+				contentsTransformClosed,
+				contentsTransformOpened,
+				contentsStyleClosed,
+				contentsStyleOpened;
+
+			var originalStyles = {},
+				addedEventListeners = [];
+
+			// Ongoing animations (for fallback mode)
+			var menuAnimation,
+				contentsAnimation,
+				coverAnimation;
+
+			configure( options );
+
+			/**
+			 * Initializes Meny with the specified user options,
+			 * may be called multiple times as configuration changes.
+			 */
+			function configure( o ) {
+				// Extend the default config object with the passed in
+				// options
+				Meny.extend( config, o );
+
+				setupPositions();
+				setupWrapper();
+				setupCover();
+				setupMenu();
+				setupContents();
+
+				bindEvents();
+			}
+
+			/**
+			 * Prepares the transforms for the current positioning
+			 * settings.
+			 */
+			function setupPositions() {
+				menuTransformOpened = '';
+				contentsTransformClosed = '';
+				menuAngle = config.angle;
+				contentsAngle = config.angle / -2;
+
+				switch( config.position ) {
+					case POSITION_T:
+						// Primary transform:
+						menuTransformOrigin = '50% 0%';
+						menuTransformClosed = 'rotateX( ' + menuAngle + 'deg ) translateY( -100% ) translateY( '+ config.overlap +'px )';
+						contentsTransformOrigin = '50% 0';
+						contentsTransformOpened = 'translateY( '+ config.height +'px ) rotateX( ' + contentsAngle + 'deg )';
+
+						// Position fallback:
+						menuStyleClosed = { top: '-' + (config.height-config.overlap) + 'px' };
+						menuStyleOpened = { top: '0px' };
+						contentsStyleClosed = { top: '0px' };
+						contentsStyleOpened = { top: config.height + 'px' };
+						break;
+
+					case POSITION_R:
+						// Primary transform:
+						menuTransformOrigin = '100% 50%';
+						menuTransformClosed = 'rotateY( ' + menuAngle + 'deg ) translateX( 100% ) translateX( -2px ) scale( 1.01 )';
+						contentsTransformOrigin = '100% 50%';
+						contentsTransformOpened = 'translateX( -'+ config.width +'px ) rotateY( ' + contentsAngle + 'deg )';
+
+						// Position fallback:
+						menuStyleClosed = { right: '-' + (config.width-config.overlap) + 'px' };
+						menuStyleOpened = { right: '0px' };
+						contentsStyleClosed = { left: '0px' };
+						contentsStyleOpened = { left: '-' + config.width + 'px' };
+						break;
+
+					case POSITION_B:
+						// Primary transform:
+						menuTransformOrigin = '50% 100%';
+						menuTransformClosed = 'rotateX( ' + -menuAngle + 'deg ) translateY( 100% ) translateY( -'+ config.overlap +'px )';
+						contentsTransformOrigin = '50% 100%';
+						contentsTransformOpened = 'translateY( -'+ config.height +'px ) rotateX( ' + -contentsAngle + 'deg )';
+
+						// Position fallback:
+						menuStyleClosed = { bottom: '-' + (config.height-config.overlap) + 'px' };
+						menuStyleOpened = { bottom: '0px' };
+						contentsStyleClosed = { top: '0px' };
+						contentsStyleOpened = { top: '-' + config.height + 'px' };
+						break;
+
+					default:
+						// Primary transform:
+						menuTransformOrigin = '100% 50%';
+						menuTransformClosed = 'translateX( -100% ) translateX( '+ config.overlap +'px ) scale( 1.01 ) rotateY( ' + -menuAngle + 'deg )';
+						contentsTransformOrigin = '0 50%';
+						contentsTransformOpened = 'translateX( '+ config.width +'px ) rotateY( ' + -contentsAngle + 'deg )';
+
+						// Position fallback:
+						menuStyleClosed = { left: '-' + (config.width-config.overlap) + 'px' };
+						menuStyleOpened = { left: '0px' };
+						contentsStyleClosed = { left: '0px' };
+						contentsStyleOpened = { left: config.width + 'px' };
+						break;
+				}
+			}
+
+			/**
+			 * The wrapper element holds the menu and contents.
+			 */
+			function setupWrapper() {
+				// Add a class to allow for custom styles based on
+				// position
+				Meny.addClass( dom.wrapper, 'meny-' + config.position );
+
+				originalStyles.wrapper = dom.wrapper.style.cssText;
+
+				dom.wrapper.style[ Meny.prefix( 'perspective' ) ] = '800px';
+				dom.wrapper.style[ Meny.prefix( 'perspectiveOrigin' ) ] = contentsTransformOrigin;
+			}
+
+			/**
+			 * The cover is used to obfuscate the contents while
+			 * Meny is open.
+			 */
+			function setupCover() {
+				if( dom.cover ) {
+					dom.cover.parentNode.removeChild( dom.cover );
+				}
+
+				dom.cover = document.createElement( 'div' );
+
+				// Disabled until a falback fade in animation is added
+				dom.cover.style.position = 'absolute';
+				dom.cover.style.display = 'block';
+				dom.cover.style.width = '100%';
+				dom.cover.style.height = '100%';
+				dom.cover.style.left = 0;
+				dom.cover.style.top = 0;
+				dom.cover.style.zIndex = 1000;
+				dom.cover.style.visibility = 'hidden';
+				dom.cover.style.opacity = 0;
+
+				// Silence unimportant errors in IE8
+				try {
+					dom.cover.style.background = 'rgba( 0, 0, 0, 0.4 )';
+					dom.cover.style.background = '-ms-linear-gradient('+ config.position +','+ config.gradient;
+					dom.cover.style.background = '-moz-linear-gradient('+ config.position +','+ config.gradient;
+					dom.cover.style.background = '-webkit-linear-gradient('+ config.position +','+ config.gradient;
+				}
+				catch( e ) {}
+
+				if( supports3DTransforms ) {
+					dom.cover.style[ Meny.prefix( 'transition' ) ] = 'all ' + config.transitionDuration +' '+ config.transitionEasing;
+				}
+
+				dom.contents.appendChild( dom.cover );
+			}
+
+			/**
+			 * The meny element that folds out upon activation.
+			 */
+			function setupMenu() {
+				// Shorthand
+				var style = dom.menu.style;
+
+				switch( config.position ) {
+					case POSITION_T:
+						style.width = '100%';
+						style.height = config.height + 'px';
+						break;
+
+					case POSITION_R:
+						style.right = '0';
+						style.width = config.width + 'px';
+						style.height = '100%';
+						break;
+
+					case POSITION_B:
+						style.bottom = '0';
+						style.width = '100%';
+						style.height = config.height + 'px';
+						break;
+
+					case POSITION_L:
+						style.width = config.width + 'px';
+						style.height = '100%';
+						break;
+				}
+
+				originalStyles.menu = style.cssText;
+
+				style.position = 'fixed';
+				style.display = 'block';
+				style.zIndex = 1;
+
+				if( supports3DTransforms ) {
+					style[ Meny.prefix( 'transform' ) ] = menuTransformClosed;
+					style[ Meny.prefix( 'transformOrigin' ) ] = menuTransformOrigin;
+					style[ Meny.prefix( 'transition' ) ] = 'all ' + config.transitionDuration +' '+ config.transitionEasing;
+				}
+				else {
+					Meny.extend( style, menuStyleClosed );
+				}
+			}
+
+			/**
+			 * The contents element which gets pushed aside while
+			 * Meny is open.
+			 */
+			function setupContents() {
+				// Shorthand
+				var style = dom.contents.style;
+
+				originalStyles.contents = style.cssText;
+
+				if( supports3DTransforms ) {
+					style[ Meny.prefix( 'transform' ) ] = contentsTransformClosed;
+					style[ Meny.prefix( 'transformOrigin' ) ] = contentsTransformOrigin;
+					style[ Meny.prefix( 'transition' ) ] = 'all ' + config.transitionDuration +' '+ config.transitionEasing;
+				}
+				else {
+					style.position = style.position.match( /relative|absolute|fixed/gi ) ? style.position : 'relative';
+					Meny.extend( style, contentsStyleClosed );
+				}
+			}
+
+			/**
+			 * Attaches all input event listeners.
+			 */
+			function bindEvents() {
+
+				if( 'ontouchstart' in window ) {
+					if( config.touch ) {
+						Meny.bindEvent( document, 'touchstart', onTouchStart );
+						Meny.bindEvent( document, 'touchend', onTouchEnd );
+					}
+					else {
+						Meny.unbindEvent( document, 'touchstart', onTouchStart );
+						Meny.unbindEvent( document, 'touchend', onTouchEnd );
+					}
+				}
+
+				if( config.mouse ) {
+					Meny.bindEvent( document, 'mousedown', onMouseDown );
+					Meny.bindEvent( document, 'mouseup', onMouseUp );
+					Meny.bindEvent( document, 'mousemove', onMouseMove );
+				}
+				else {
+					Meny.unbindEvent( document, 'mousedown', onMouseDown );
+					Meny.unbindEvent( document, 'mouseup', onMouseUp );
+					Meny.unbindEvent( document, 'mousemove', onMouseMove );
+				}
+			}
+
+			/**
+			 * Expands the menu.
+			 */
+			function open() {
+				//if( !isOpen ) {
+					isOpen = true;
+
+					Meny.addClass( dom.wrapper, 'meny-active' );
+
+					dom.cover.style.height = dom.contents.scrollHeight + 'px';
+					dom.cover.style.visibility = 'visible';
+
+					// Use transforms and transitions if available...
+					if( supports3DTransforms ) {
+						// 'webkitAnimationEnd oanimationend msAnimationEnd animationend transitionend'
+						Meny.bindEventOnce( dom.wrapper, 'transitionend', function() {
+							Meny.dispatchEvent( dom.menu, 'opened' );
+						} );
+
+						dom.cover.style.opacity = 1;
+
+						dom.contents.style[ Meny.prefix( 'transform' ) ] = contentsTransformOpened;
+						dom.menu.style[ Meny.prefix( 'transform' ) ] = menuTransformOpened;
+					}
+					// ...fall back on JS animation
+					else {
+						menuAnimation && menuAnimation.stop();
+						menuAnimation = Meny.animate( dom.menu, menuStyleOpened, 500 );
+						contentsAnimation && contentsAnimation.stop();
+						contentsAnimation = Meny.animate( dom.contents, contentsStyleOpened, 500 );
+						coverAnimation && coverAnimation.stop();
+						coverAnimation = Meny.animate( dom.cover, { opacity: 1 }, 500 );
+					}
+
+					Meny.dispatchEvent( dom.menu, 'open' );
+				//}
+			}
+
+			/**
+			 * Collapses the menu.
+			 */
+			function close() {
+				if( isOpen ) {
+					isOpen = false;
+
+					Meny.removeClass( dom.wrapper, 'meny-active' );
+
+					// Use transforms and transitions if available...
+					if( supports3DTransforms ) {
+						// 'webkitAnimationEnd oanimationend msAnimationEnd animationend transitionend'
+						Meny.bindEventOnce( dom.wrapper, 'transitionend', function() {
+							Meny.dispatchEvent( dom.menu, 'closed' );
+						} );
+
+						dom.cover.style.visibility = 'hidden';
+						dom.cover.style.opacity = 0;
+
+						dom.contents.style[ Meny.prefix( 'transform' ) ] = contentsTransformClosed;
+						dom.menu.style[ Meny.prefix( 'transform' ) ] = menuTransformClosed;
+					}
+					// ...fall back on JS animation
+					else {
+						menuAnimation && menuAnimation.stop();
+						menuAnimation = Meny.animate( dom.menu, menuStyleClosed, 500 );
+						contentsAnimation && contentsAnimation.stop();
+						contentsAnimation = Meny.animate( dom.contents, contentsStyleClosed, 500 );
+						coverAnimation && coverAnimation.stop();
+						coverAnimation = Meny.animate( dom.cover, { opacity: 0 }, 500, function() {
+							dom.cover.style.visibility = 'hidden';
+							Meny.dispatchEvent( dom.menu, 'closed' );
+						} );
+					}
+					Meny.dispatchEvent( dom.menu, 'close' );
+				}
+			}
+
+			/**
+			 * Unbinds Meny and resets the DOM to the state it
+			 * was at before Meny was initialized.
+			 */
+			function destroy() {
+				dom.wrapper.style.cssText = originalStyles.wrapper
+				dom.menu.style.cssText = originalStyles.menu;
+				dom.contents.style.cssText = originalStyles.contents;
+
+				if( dom.cover && dom.cover.parentNode ) {
+					dom.cover.parentNode.removeChild( dom.cover );
+				}
+
+				Meny.unbindEvent( document, 'touchstart', onTouchStart );
+				Meny.unbindEvent( document, 'touchend', onTouchEnd );
+				Meny.unbindEvent( document, 'mousedown', onMouseDown );
+				Meny.unbindEvent( document, 'mouseup', onMouseUp );
+				Meny.unbindEvent( document, 'mousemove', onMouseMove );
+
+				for( var i in addedEventListeners ) {
+					this.removeEventListener( addedEventListeners[i][0], addedEventListeners[i][1] );
+				}
+
+				addedEventListeners = [];
+			}
+
+
+			/// INPUT: /////////////////////////////////
+
+			function onMouseDown( event ) {
+				isMouseDown = true;
+			}
+
+			function onMouseMove( event ) {
+				// Prevent opening/closing when mouse is down since
+				// the user may be selecting text
+				if( !isMouseDown ) {
+					var x = event.clientX - indentX,
+						y = event.clientY - indentY;
+
+					switch( config.position ) {
+						case POSITION_T:
+							if( y > config.height ) {
+								close();
+							}
+							else if( y < config.threshold ) {
+								open();
+							}
+							break;
+
+						case POSITION_R:
+							var w = dom.wrapper.offsetWidth;
+							if( x < w - config.width ) {
+								close();
+							}
+							else if( x > w - config.threshold ) {
+								open();
+							}
+							break;
+
+						case POSITION_B:
+							var h = dom.wrapper.offsetHeight;
+							if( y < h - config.height ) {
+								close();
+							}
+							else if( y > h - config.threshold ) {
+								open();
+							}
+							break;
+
+						case POSITION_L:
+							if( x > config.width ) {
+								close();
+							}
+							else if( x < config.threshold ) {
+								open();
+							}
+							break;
+					}
+				}
+			}
+
+			function onMouseUp( event ) {
+				isMouseDown = false;
+			}
+
+			function onTouchStart( event ) {
+				touchStartX = event.touches[0].clientX - indentX;
+				touchStartY = event.touches[0].clientY - indentY;
+				touchMoveX = null;
+				touchMoveY = null;
+
+				Meny.bindEvent( document, 'touchmove', onTouchMove );
+			}
+
+			function onTouchMove( event ) {
+				touchMoveX = event.touches[0].clientX - indentX;
+				touchMoveY = event.touches[0].clientY - indentY;
+
+				var swipeMethod = null;
+
+				// Check for swipe gestures in any direction
+
+				if( Math.abs( touchMoveX - touchStartX ) > Math.abs( touchMoveY - touchStartY ) ) {
+					if( touchMoveX < touchStartX - config.threshold ) {
+						swipeMethod = onSwipeRight;
+					}
+					else if( touchMoveX > touchStartX + config.threshold ) {
+						swipeMethod = onSwipeLeft;
+					}
+				}
+				else {
+					if( touchMoveY < touchStartY - config.threshold ) {
+						swipeMethod = onSwipeDown;
+					}
+					else if( touchMoveY > touchStartY + config.threshold ) {
+						swipeMethod = onSwipeUp;
+					}
+				}
+
+				if( swipeMethod && swipeMethod() ) {
+					event.preventDefault();
+				}
+			}
+
+			function onTouchEnd( event ) {
+				Meny.unbindEvent( document, 'touchmove', onTouchMove );
+
+				// If there was no movement this was a tap
+				if( touchMoveX === null && touchMoveY === null ) {
+					onTap();
+				}
+			}
+
+			function onTap() {
+				var isOverContent = ( config.position === POSITION_T && touchStartY > config.height ) ||
+									( config.position === POSITION_R && touchStartX < dom.wrapper.offsetWidth - config.width ) ||
+									( config.position === POSITION_B && touchStartY < dom.wrapper.offsetHeight - config.height ) ||
+									( config.position === POSITION_L && touchStartX > config.width );
+
+				if( isOverContent ) {
+					close();
+				}
+			}
+
+			function onSwipeLeft() {
+				if( config.position === POSITION_R && isOpen ) {
+					close();
+					return true;
+				}
+				else if( config.position === POSITION_L && !isOpen ) {
+					open();
+					return true;
+				}
+			}
+
+			function onSwipeRight() {
+				if( config.position === POSITION_R && !isOpen ) {
+					open();
+					return true;
+				}
+				else if( config.position === POSITION_L && isOpen ) {
+					close();
+					return true;
+				}
+			}
+
+			function onSwipeUp() {
+				if( config.position === POSITION_B && isOpen ) {
+					close();
+					return true;
+				}
+				else if( config.position === POSITION_T && !isOpen ) {
+					open();
+					return true;
+				}
+			}
+
+			function onSwipeDown() {
+				if( config.position === POSITION_B && !isOpen ) {
+					open();
+					return true;
+				}
+				else if( config.position === POSITION_T && isOpen ) {
+					close();
+					return true;
+				}
+			}
+
+
+			/// API: ///////////////////////////////////
+
+			return {
+				configure: configure,
+
+				open: open,
+				close: close,
+				destroy: destroy,
+
+				isOpen: function() {
+					return isOpen;
+				},
+
+				/**
+				 * Forward event binding to the menu DOM element.
+				 */
+				addEventListener: function( type, listener ) {
+					addedEventListeners.push( [type, listener] );
+					dom.menu && Meny.bindEvent( dom.menu, type, listener );
+				},
+				removeEventListener: function( type, listener ) {
+					dom.menu && Meny.unbindEvent( dom.menu, type, listener );
+				}
+			};
+
+		})();
+	},
+
+	/**
+	 * Helper method, changes an element style over time.
+	 */
+	animate: function( element, properties, duration, callback ) {
+		return (function() {
+			// Will hold start/end values for all properties
+			var interpolations = {};
+
+			// Format properties
+			for( var p in properties ) {
+				interpolations[p] = {
+					start: parseFloat( element.style[p] ) || 0,
+					end: parseFloat( properties[p] ),
+					unit: ( typeof properties[p] === 'string' && properties[p].match( /px|em|%/gi ) ) ? properties[p].match( /px|em|%/gi )[0] : ''
+				};
+			}
+
+			var animationStartTime = Date.now(),
+				animationTimeout;
+
+			// Takes one step forward in the animation
+			function step() {
+				// Ease out
+				var progress = 1 - Math.pow( 1 - ( ( Date.now() - animationStartTime ) / duration ), 5 );
+
+				// Set style to interpolated value
+				for( var p in interpolations ) {
+					var property = interpolations[p];
+					element.style[p] = property.start + ( ( property.end - property.start ) * progress ) + property.unit;
+				}
+
+				// Continue as long as we're not done
+				if( progress < 1 ) {
+					animationTimeout = setTimeout( step, 1000 / 60 );
+				}
+				else {
+					callback && callback();
+					stop();
+				}
+			}
+
+			// Cancels the animation
+			function stop() {
+				clearTimeout( animationTimeout );
+			}
+
+			// Starts the animation
+			step();
+
+
+			/// API: ///////////////////////////////////
+
+			return {
+				stop: stop
+			};
+		})();
+	},
+
+	/**
+	 * Extend object a with the properties of object b.
+	 * If there's a conflict, object b takes precedence.
+	 */
+	extend: function( a, b ) {
+		for( var i in b ) {
+			a[ i ] = b[ i ];
+		}
+	},
+
+	/**
+	 * Prefixes a style property with the correct vendor.
+	 */
+	prefix: function( property, el ) {
+		var propertyUC = property.slice( 0, 1 ).toUpperCase() + property.slice( 1 ),
+			vendors = [ 'Webkit', 'Moz', 'O', 'ms' ];
+
+		for( var i = 0, len = vendors.length; i < len; i++ ) {
+			var vendor = vendors[i];
+
+			if( typeof ( el || document.body ).style[ vendor + propertyUC ] !== 'undefined' ) {
+				return vendor + propertyUC;
+			}
+		}
+
+		return property;
+	},
+
+	/**
+	 * Adds a class to the target element.
+	 */
+	addClass: function( element, name ) {
+		element.className = element.className.replace( /\s+$/gi, '' ) + ' ' + name;
+	},
+
+	/**
+	 * Removes a class from the target element.
+	 */
+	removeClass: function( element, name ) {
+		element.className = element.className.replace( name, '' );
+	},
+
+	/**
+	 * Adds an event listener in a browser safe way.
+	 */
+	bindEvent: function( element, ev, fn ) {
+		if( element.addEventListener ) {
+			element.addEventListener( ev, fn, false );
+		}
+		else {
+			element.attachEvent( 'on' + ev, fn );
+		}
+	},
+
+	/**
+	 * Removes an event listener in a browser safe way.
+	 */
+	unbindEvent: function( element, ev, fn ) {
+		if( element.removeEventListener ) {
+			element.removeEventListener( ev, fn, false );
+		}
+		else {
+			element.detachEvent( 'on' + ev, fn );
+		}
+	},
+
+	bindEventOnce: function ( element, ev, fn ) {
+		var me = this;
+		var listener = function() {
+			me.unbindEvent( element, ev, listener );
+			fn.apply( this, arguments );
+		};
+		this.bindEvent( element, ev, listener );
+	},
+
+	/**
+	 * Dispatches an event of the specified type from the
+	 * menu DOM element.
+	 */
+	dispatchEvent: function( element, type, properties ) {
+		if( element ) {
+			var event = document.createEvent( "HTMLEvents", 1, 2 );
+			event.initEvent( type, true, true );
+			Meny.extend( event, properties );
+			element.dispatchEvent( event );
+		}
+	},
+
+	/**
+	 * Retrieves query string as a key/value hash.
+	 */
+	getQuery: function() {
+		var query = {};
+
+		location.search.replace( /[A-Z0-9]+?=([\w|:|\/\.]*)/gi, function(a) {
+			query[ a.split( '=' ).shift() ] = a.split( '=' ).pop();
+		} );
+
+		return query;
+	}
+
+};
+
+return Meny;
+
+}));

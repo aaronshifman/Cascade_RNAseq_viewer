@@ -475,7 +475,7 @@ require_once('config.php')
                 //draw links
                 for (var child in levels[i][parent].linked) {
                 var childName = (levels[i][parent].linked[child]);
-                        var material = new THREE.LineBasicMaterial({color: 0xffff00});
+                        var material = new THREE.LineBasicMaterial({color: 0x<?php echo $link_color;?>});
                         var geometry = new THREE.Geometry();
                         if (levels[i][parent].family !== undefined) {
                 displayCNV = 0;
@@ -530,7 +530,7 @@ require_once('config.php')
                         var size = 360 / resolution; //segment length
 
                         var geometry = new THREE.Geometry();
-                        var material = new THREE.LineBasicMaterial({transparent: true, color: 0xFFFFFF, opacity: (1.1 - (z / (2 * levels.length)))});
+                        var material = new THREE.LineBasicMaterial({transparent: true, color: "#<?php echo $ring_color?>", opacity: (1.1 - (z / (2 * levels.length)))});
                         for (var i = 0; i <= resolution; i++) {
                 var segment = (i * size) * Math.PI / 180;
                         geometry.vertices.push(new THREE.Vertex(new THREE.Vector3(Math.cos(segment) * amplitude, 0, Math.sin(segment) * amplitude)));

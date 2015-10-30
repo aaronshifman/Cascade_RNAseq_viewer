@@ -213,7 +213,7 @@ include('../config.php');
         // objects to add the gene name to the scene
         var geom = new THREE.ShapeGeometry(text);
         var mat = new THREE.MeshBasicMaterial({
-            color: "#66FFEE"
+            color: "#<?php echo $node_name_color;?>"
         });
         var mesh = new THREE.Mesh(geom, mat);
         if (z !== undefined)

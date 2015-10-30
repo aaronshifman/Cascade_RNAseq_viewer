@@ -14,4 +14,7 @@ $node_color_high = "FF0000";
 $text_size = 10;
 $out_color = "FF0000";
 $reg_color = "66ff66";
+$ring_color = "FFFFFF";
+$node_name_color = "66FFEE";
+$link_color = "FFFF00"
 ?>

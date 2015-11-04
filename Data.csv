@@ -1,5 +1,4 @@
 id,patient,expression,snp,damaging,indel,splice,cnv
-10,,,,,,,,
 RTK,sample_1,35,1,0,0,0,0,
 ILK,sample_1,87,0,0,0,0,0,
 PI3K,sample_1,62,0,0,0,0,0,

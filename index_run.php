@@ -53,7 +53,7 @@ require_once('config.php')
             <input class ="header-right" type="button" id="circle_toggle"value="Disable Levels" onclick="toggle_circles();"/>
 <!--            <input class ="header-right" type="button" id="sel_sec_expr"value="Select Comparison" onclick="sel_comp();"/>-->
 <!--            <input type="button" value ='Generate Image' onclick='print_view();'/>-->
-            <input class="header-right" type="button" value="View documentation" onclick="window.open('http://www.bioinfo.iric.ca/~wilhelmb/cas/Cascade intro.pdf')"/><br/>
+            <input class="header-right" type="button" value="View documentation" onclick="window.open('http://www.bioinfo.iric.ca/~shifmana/Cascade/Cascade_intro.pdf')"/><br/>
         </div>
         <div class='header title'>
             <div id='pathway_title'></div>

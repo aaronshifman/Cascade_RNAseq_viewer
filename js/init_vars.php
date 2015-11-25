@@ -10,6 +10,56 @@ var currentPath;
 var pathNames = []
 var swap = false
 var defName = []
+
+var bg_color = "<?php echo $bg_color?>"
+var fam_node_color = "<?php echo $fam_node_color?>"
+var out_color = "<?php echo $out_color?>"
+var reg_color = "<?php echo $reg_color?>"
+var ring_color = "<?php echo $ring_color?>"
+var node_name_color = "<?php echo $node_name_color?>"
+var link_color = "<?php echo $link_color?>"
+var color_low = "<?php echo $node_color_low?>"
+var color_med = "<?php echo $node_color_med?>"
+var color_high = "<?php echo $node_color_high?>"
+settings = [bg_color,fam_node_color,out_color,reg_color,ring_color,node_name_color,link_color,color_low,color_med,color_high]
+
+$.fn.dataTableExt.sErrMode = "throw"
+$("#set_colors").click(function(){
+    $("#dialog-modal").load("color_scheme.php").dialog({
+        open: function() {
+            controls = null
+            $("#color_table").dataTable({
+                "bJQueryUI": true,
+                "scrollY": "200px",
+                "scrollCollapse": true,
+                "paging": false
+            });
+            $(".basic").each(function(){
+                $(this).spectrum({
+                    color: "#"+$(this).attr('dflt_color')
+                
+                })
+            })
+        },
+        close: function() {
+            controls = new THREE.OrbitControls(camera);
+            $(".header").css('background-color','#'+settings[0])
+            $(".meny").css('background-color','#'+settings[0])
+            $("body").css('background-color','#'+settings[0])
+            $("#pathway_title input").css('background','#'+settings[0])
+            $(".pathway_scroll").css('background','#'+settings[0])
+            renderer.setClearColorHex('0x'+settings[0], 1);
+            
+            $(".display-span").eq(0).css('background-color',"#"+settings[7])
+            $(".display-span").eq(1).css('background-color',"#"+settings[8])
+            $(".display-span").eq(2).css('background-color',"#"+settings[9])
+            colors = ["#"+settings[7],"#"+settings[8],"#"+settings[9]]
+            colors_freindly = ["#"+settings[7],"#"+settings[8],"#"+settings[9]]
+            initNodes(nodes)
+        },
+        dialogClass: ""
+    })
+})
 $.get("getPaths.php", function(data) {
     var tableRows = []
 

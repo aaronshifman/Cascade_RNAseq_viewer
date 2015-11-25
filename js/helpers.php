@@ -135,7 +135,7 @@ include('../config.php');
         if (levelObj.familyMember && z === undefined)
             return;
         if (levelObj.family)
-        mat.color.setHex('0x<?php echo $fam_node_color; ?>');
+        mat.color.setHex('0x'+settings[1]);
         var nodeObj = new THREE.Mesh(geom, mat);
         var displayCNV = levelObj.copyNumber;
         if (isNaN(displayCNV)) { // if cnv does not come in data (error in data)
@@ -213,7 +213,7 @@ include('../config.php');
         // objects to add the gene name to the scene
         var geom = new THREE.ShapeGeometry(text);
         var mat = new THREE.MeshBasicMaterial({
-            color: "#<?php echo $node_name_color;?>"
+            color: "#"+settings[5]
         });
         var mesh = new THREE.Mesh(geom, mat);
         if (z !== undefined)
@@ -531,12 +531,12 @@ include('../config.php');
             });// add expression (RPKM) value above vertical line
             var geom = new THREE.ShapeGeometry(shapes);
             if (famNode.exprOutlier) {
-                mat = new THREE.MeshBasicMaterial({color: "#<?php echo $out_color;?>"});
+                mat = new THREE.MeshBasicMaterial({color: "#"+settings[2]});
                 if (EXPR_STATE % 3 == 2) {
-                    mat = new THREE.MeshBasicMaterial({color: 0x<?php echo $reg_color;?>});
+                    mat = new THREE.MeshBasicMaterial({color: '#'+settings[3]});
                 }
             } else {
-                mat = new THREE.MeshBasicMaterial({color: 0x<?php echo $reg_color;?>});
+                mat = new THREE.MeshBasicMaterial({color: '#'+settings[3]});
             }
             mesh = new THREE.Mesh(geom, mat);
             mesh.position.set(famNode.position.x, famNode.position.z + (exprVal === undefined ? 0 : exprVal) + 20, famNode.position.y);

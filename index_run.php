@@ -442,12 +442,12 @@ require_once('config.php')
                 });
                         var geom = new THREE.ShapeGeometry(shapes);
                         if (levels[i][parent].exprOutlier) { //if there are outliers in the expression, draw the number red
-                mat = new THREE.MeshBasicMaterial({color: "#<?php echo $out_color; ?>"});
+                mat = new THREE.MeshBasicMaterial({color: "#"+settings[2]});
                         if (EXPR_STATE % 3 == 2) {
-                mat = new THREE.MeshBasicMaterial({color: 0x<?php echo $reg_color; ?>});
+                mat = new THREE.MeshBasicMaterial({color: '#'+settings[3]});
                 }
                 } else {
-                mat = new THREE.MeshBasicMaterial({color: 0x<?php echo $reg_color; ?>});
+                mat = new THREE.MeshBasicMaterial({color: '#'+settings[3]});
                 }
                 mesh = new THREE.Mesh(geom, mat);
                         if (CNV_STATE % 3 < 2) {
@@ -475,7 +475,7 @@ require_once('config.php')
                 //draw links
                 for (var child in levels[i][parent].linked) {
                 var childName = (levels[i][parent].linked[child]);
-                        var material = new THREE.LineBasicMaterial({color: 0x<?php echo $link_color;?>});
+                        var material = new THREE.LineBasicMaterial({color: '#'+settings[6]});
                         var geometry = new THREE.Geometry();
                         if (levels[i][parent].family !== undefined) {
                 displayCNV = 0;
@@ -530,7 +530,7 @@ require_once('config.php')
                         var size = 360 / resolution; //segment length
 
                         var geometry = new THREE.Geometry();
-                        var material = new THREE.LineBasicMaterial({transparent: true, color: "#<?php echo $ring_color?>", opacity: (1.1 - (z / (2 * levels.length)))});
+                        var material = new THREE.LineBasicMaterial({transparent: true, color: "#"+settings[4], opacity: (1.1 - (z / (2 * levels.length)))});
                         for (var i = 0; i <= resolution; i++) {
                 var segment = (i * size) * Math.PI / 180;
                         geometry.vertices.push(new THREE.Vertex(new THREE.Vector3(Math.cos(segment) * amplitude, 0, Math.sin(segment) * amplitude)));

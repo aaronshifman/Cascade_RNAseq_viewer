@@ -88,7 +88,7 @@ body {
     margin-left:20px;
 }
 #pathway_title input{
-    background: #222 !important;
+    background: #222;
     color:white;
 }
 .pathway_scroll{

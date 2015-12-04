@@ -5,7 +5,7 @@
 function loadPathwayFromFile(evt) {
     fromDb = false; // not from the database
     var file1;
-    readFiles(evt.target.files[0], function(e) {
+    readFiles(evt.target.files[0], function (e) {
         file1 = (e.target.result); //file lines
         origNodes = file1;
         parsePathway(file1);
@@ -20,14 +20,14 @@ function loadPathwayFromDB(id) {
     /**
      * load pathway lines and generate "loading..." message
      */
-    $.get('load_pathway.php?path=' + id, function(data) {
+    $.get('load_pathway.php?path=' + id, function (data) {
         $("#dialog-modal").html("<image src='css/images/loading_gif.gif'> Loading...").dialog({
             modal: true,
             dialogClass: "no-close",
-            open: function() {
+            open: function () {
                 controls = null;
             },
-            close: function() {
+            close: function () {
                 controls = new THREE.OrbitControls(camera);
             }
         });
@@ -40,7 +40,7 @@ function loadPathwayFromDB(id) {
 
 function loadControllFile(evt) {
     var file1;
-    readFiles(evt.target.files[0], function(e) {
+    readFiles(evt.target.files[0], function (e) {
         file1 = (e.target.result);
         controllFile = file1
         parseControll(file1);
@@ -55,7 +55,7 @@ function loadControllFromDB(id) {
         newindel: $("#newindel_toggle").is(":checked"),
         source: id
     }
-    $.post('load_patient_IRIC.php', obj, function(data) {
+    $.post('load_patient_IRIC.php', obj, function (data) {
         parseControll(data, 1, false)
     });
 }
@@ -67,7 +67,7 @@ function loadControllFromDB(id) {
 function loadPatientsFromFile(evt) {
     var file1;
     fromDb = false;
-    readFiles(evt.target.files[0], function(e) {
+    readFiles(evt.target.files[0], function (e) {
         file1 = (e.target.result);
         controllData = file1
         parsePatients(file1);
@@ -89,7 +89,7 @@ function loadPatientsFromDB(reload) {
         newindel: $("#newindel_toggle").is(":checked"),
         source: $("input[name='data_source']:checked").attr("id")
     }
-    $.post('load_patient_IRIC.php', obj, function(data) {
+    $.post('load_patient_IRIC.php', obj, function (data) {
         parsePatients(data, 1, reload)
     });
 }
@@ -261,30 +261,30 @@ function parsePatients(pat_lines, start, reload) {
         var dispExpr = median(expressionArray);
         var meanVal = mean(expressionArray);
         var stdevValue = stdev(expressionArray, meanVal)
-		var mean_median_limit = 15 * dispExpr
- 		// use initial mean to remove outliers and recalculate mean
-		var filtered_sum = 0;
-		var outCounter = 0;
-		for (var expr in expressionArray) {
-				if ( expressionArray[expr].expression < mean_median_limit){
-					filtered_sum += expressionArray[expr].expression
-					outCounter += 1;
-				}			
-		}
-		var new_meanVal=filtered_sum / outCounter
+        var mean_median_limit = settings[11] * dispExpr
+        // use initial mean to remove outliers and recalculate mean
+        var filtered_sum = 0;
+        var outCounter = 0;
+        for (var expr in expressionArray) {
+            if (expressionArray[expr].expression < mean_median_limit) {
+                filtered_sum += expressionArray[expr].expression
+                outCounter += 1;
+            }
+        }
+        var new_meanVal = filtered_sum / outCounter
         var upperBound = new_meanVal + 0.8 * new_meanVal
         var lowerBound = new_meanVal - 0.8 * new_meanVal
-		outCounter = 0;
+        outCounter = 0;
         for (var expr in expressionArray) {
             if ((expressionArray[expr].expression > upperBound) || (expressionArray[expr].expression < lowerBound)) {//if the expression is outside +/- bounds
-				if ( expressionArray[expr].expression < mean_median_limit){
-					expressionArray[expr].outlier = true
-					outCounter += 1;
-				}
+                if (expressionArray[expr].expression < mean_median_limit) {
+                    expressionArray[expr].outlier = true
+                    outCounter += 1;
+                }
             }
         }
         outlierCutoff = 0.35
-        if (outCounter/expressionArray.length >= outlierCutoff){
+        if (outCounter / expressionArray.length >= outlierCutoff) {
             nodes[node].exprOutlier = true
         }
         nodes[node].expression = parseFloat(parseFloat(dispExpr).toFixed(1))
@@ -311,7 +311,7 @@ function readFiles(file, callback) {
 function customTargets(evt) {
     $("#show-cust-mut").show()
     var file1;
-    readFiles(evt.target.files[0], function(e) {
+    readFiles(evt.target.files[0], function (e) {
         file1 = (e.target.result);
         parseCustomMut(file1); //parse the lines
     });
@@ -335,7 +335,7 @@ function parseCustomMut(file) {
  * @returns {undefined}
  */
 function loadCustomMutsFromDb(id, view) {
-    $.get('getTarget_list.php?id=' + id, function(data) {//load genes based on disease id
+    $.get('getTarget_list.php?id=' + id, function (data) {//load genes based on disease id
         if (view === undefined) {
             parseCustomMut(data) //if the genes are to be used, parse them
         } else { //otherwise generate the datatable for them
@@ -350,13 +350,13 @@ function loadCustomMutsFromDb(id, view) {
             $("#genes-table").dataTable({
                 "bJQueryUI": true,
                 "aLengthMenu": [5, 10, 50],
-                "fnInitComplete": function() {
+                "fnInitComplete": function () {
                     $("#genes-table").css("width", '')
                     $("#dialog-modal").dialog({
-                        open: function() {
+                        open: function () {
                             controls = null
                         },
-                        close: function() {
+                        close: function () {
                             controls = new THREE.OrbitControls(camera);
                         },
                         dialogClass: "",
@@ -381,13 +381,13 @@ function view_targets() {
     $("#genes-table").dataTable({
         "bJQueryUI": true,
         "aLengthMenu": [5, 10, 50],
-        "fnInitComplete": function() {
+        "fnInitComplete": function () {
             $("#genes-table").css("width", '')
             $("#dialog-modal").dialog({
-                open: function() {
+                open: function () {
                     controls = null
                 },
-                close: function() {
+                close: function () {
                     controls = new THREE.OrbitControls(camera);
                 },
                 dialogClass: "",

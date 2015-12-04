@@ -438,7 +438,7 @@ require_once('config.php')
                         var shapes, geom, mat, mesh;
                         shapes = THREE.FontUtils.generateShapes(exprLevel, {
                 font: "helvetiker",
-                        size: <?php echo $text_size; ?>
+                        size: settings[10]
                 });
                         var geom = new THREE.ShapeGeometry(shapes);
                         if (levels[i][parent].exprOutlier) { //if there are outliers in the expression, draw the number red

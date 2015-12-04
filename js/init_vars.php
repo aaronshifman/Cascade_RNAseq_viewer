@@ -21,7 +21,9 @@ var link_color = "<?php echo $link_color?>"
 var color_low = "<?php echo $node_color_low?>"
 var color_med = "<?php echo $node_color_med?>"
 var color_high = "<?php echo $node_color_high?>"
-settings = [bg_color,fam_node_color,out_color,reg_color,ring_color,node_name_color,link_color,color_low,color_med,color_high]
+var text_size = "<?php echo $text_size?>"
+var mml = "<?php echo $mml?>"
+settings = [bg_color,fam_node_color,out_color,reg_color,ring_color,node_name_color,link_color,color_low,color_med,color_high,text_size,mml]
 
 $.fn.dataTableExt.sErrMode = "throw"
 $("#set_colors").click(function(){

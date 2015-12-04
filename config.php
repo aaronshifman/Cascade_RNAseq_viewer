@@ -20,7 +20,8 @@ $out_color = "FF0000";
 $reg_color = "66ff66";
 $ring_color = "FFFFFF";
 $node_name_color = "66FFEE";
-$link_color = "FFFF00"
+$link_color = "FFFF00";
+$mml = 15;
 
 #*/ remove hash to comment default colours
 

@@ -202,12 +202,12 @@ include('../config.php');
         if (nodeObj.masterGene !== undefined) {
             text = THREE.FontUtils.generateShapes(nodeObj.masterGene, {
                 font: "helvetiker",
-                size: 10
+                size: settings[10]
             });
         } else {
             text = THREE.FontUtils.generateShapes(levelObj.name, {
                 font: "helvetiker",
-                size: 10
+                size: settings[10]
             });
         }
         // objects to add the gene name to the scene
@@ -527,7 +527,7 @@ include('../config.php');
 
             shapes = THREE.FontUtils.generateShapes(exprVal, {
                 font: "helvetiker",
-                size: <?php echo $text_size;?>
+                size: settings[10]
             });// add expression (RPKM) value above vertical line
             var geom = new THREE.ShapeGeometry(shapes);
             if (famNode.exprOutlier) {

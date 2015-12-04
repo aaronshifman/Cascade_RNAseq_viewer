@@ -1,7 +1,7 @@
 <!--Outer container for the side bar-->
 <div class="meny" style="position: fixed; display: block; z-index: 1; -webkit-transform-origin: 100% 50%; -webkit-transition: all 0.5s ease; transition: all 0.5s ease; -webkit-transform: translateX(-100%) translateX(6px) scale(1.01) rotateY(-30deg);">
     <input type="checkbox" id="hold_toggle"><label for='hold_toggle'>Freeze foldaway menu</label><br/>
-    <input type="button" id="set_colors" value='Color Scheme'/>
+    <input type="button" id="set_colors" value='Change parameters'/>
     
     <h2>Select data types to display:</h2>
     <h3>Expression</h3>

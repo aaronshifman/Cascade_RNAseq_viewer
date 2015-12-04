@@ -122,7 +122,25 @@ include './config.php';
             <td>
                 <input index="9" col_type="high_color" dflt_color = "<?php echo $node_color_high; ?>"type="text" class='basic'/>
             </td>
-        </tr>        
+        </tr>       
+        <tr>
+            <td>
+                Font Size
+            </td>
+            <td>
+                <input type="text" style="width:20px;" id="text_size" value="<?php echo $text_size; ?>"/>pt
+            </td>
+            <td></td>
+        </tr>  
+        <tr>
+            <td>
+                Outlier Threshold
+            </td>
+            <td>
+                <input type="text" style="width:20px;" id="out_thresh" value="<?php echo $mml; ?>"/>
+            </td>
+            <td></td>
+        </tr> 
     </tbody>
 </table>
 
@@ -139,6 +157,14 @@ include './config.php';
             $(this).attr('dflt_color', settings[$(this).attr("index")])
             $(this).parent().parent().children().eq(1).children().eq(0).text(settings[$(this).attr("index")])
         })
+        $("#text_size").val(settings[10])
+        $("#out_thresh").val(settings[11])
+        $("#text_size").bind("change", function () {
+            settings[10] = $("#text_size").val()
+        });
+        $("#out_thresh").bind("change", function () {
+            settings[11] = $("#out_thresh").val()
+        });
         $(".basic").each(function () {
             $(this).spectrum({
                 color: "#" + $(this).attr('dflt_color'),

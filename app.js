@@ -1,5 +1,7 @@
 (function () {
-    var app = angular.module('cascade', []);
+    var app = angular.module('cascade', ['ui.grid', 'ui.grid.selection']);
+    var loadedPathways = false;
+
     app.controller('viewSettingController', function () {
         this.backgroundColor = "#222222";
         this.familyNodeColor = "#654321";
@@ -30,4 +32,28 @@
     app.controller("cnvController", function () {
         this.cnv = 2; //off, absolute, relative
     });
+    app.controller('pathwayListController', ['$scope', '$http', 'uiGridConstants', function ($scope, $http, uiGridConstants) {
+        $scope.columns = [{field: 'pathway_id', enableHiding: false, name: 'Id', visible: false}, {
+            field: 'pathway_name', enableHiding: false, name: 'Name'
+        }, {field: 'type', enableHiding: false, name: 'Type'}];
+        $scope.gridOptions = {
+            enableSorting: true,
+            columnDefs: $scope.columns,
+            enableFullRowSelection: true,
+            multiSelect: false,
+            enableRowHeaderSelection: false,
+            enableFiltering: true,
+            onRegisterApi: function (gridApi) {
+                $scope.gridApi = gridApi;
+                gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+                    $http.get("load_pathway.php?path="+row.entity[0]).then(function (response) {
+                       parsePathway(response.data);
+                    });
+                });
+            }
+        };
+        $http.get("getPaths.php").then(function (response) {
+            $scope.gridOptions.data = response.data;
+        });
+    }]);
 })();

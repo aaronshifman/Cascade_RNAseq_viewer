@@ -3,12 +3,19 @@
 <head>
     <title>Cascade rna-Seq Browser</title>
     <link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/ui-grid.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/app.css"/>
 
-    <script type="text/javascript" src="js/angular.min.js"></script>
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/jquery-ui.js"></script>
+    <script type="text/javascript" src="js/angular.min.js"></script>
     <script type="text/javascript" src="js/meny.js"></script>
+    <script type="text/javascript" src="js/dataTables.js"></script>
+    <script type="text/javascript" src="js/ui-grid.min.js"></script>
+    <script type="text/javascript" src="js/parsePathway.js"></script>
     <script type="text/javascript" src="app.js"></script>
+
+
 </head>
 <body ng-style='{"background-color": viewSetting.backgroundColor}'>
 <script type="text/javascript">
@@ -17,6 +24,7 @@
         $("#cnv_radio").buttonset();
         $("#splice_check").button();
         $("#mutation_check").buttonset();
+
         var meny = Meny.create({
             menuElement: document.querySelector('.meny_wrapper'),
             contentsElement: document.querySelector('.main_wrapper'),
@@ -34,6 +42,9 @@
 </script>
 <div class="meny-arrow"></div>
 <div class="meny_wrapper">
+
+    <h1 class="headings">Visualization Parameters</h1>
+
     <div id="expr_radio" ng-controller="expressionController as expression">
         <input name="expression_setting" type="radio" ng-model="expression.expression_type"
                id="expr_off" value="0"><label for="expr_off">Off</label>
@@ -44,7 +55,6 @@
         <input name="expression_setting" type="radio" ng-model="expression.expression_type"
                id="expr_ratio" value='2'><label for="expr_ratio">Ratio</label>
     </div>
-
     <div ng-controller="splicingController as splicing">
         <input name="splicing_setting" type="checkbox" ng-model="splicing.splicing" id="splice_check"><label
             for="splice_check">Splicing</label>
@@ -57,7 +67,6 @@
         <input name="mutation" type="checkbox" ng-model="mutation.indel" id="novel_indel"><label
             for="novel_indel">Novel Indels</label>
     </div>
-
     <div id="cnv_radio" ng-controller="cnvController as cnv">
         <input name="cnv_setting" type="radio" ng-model="cnv.cnv"
                id="cnv_off" value="0"><label for="cnv_off">Off</label>
@@ -67,6 +76,13 @@
 
         <input name="cnv_setting" type="radio" ng-model="cnv.cnv"
                id="cnv_rel" value='2'><label for="cnv_rel">Ratio</label>
+    </div>
+
+    <h1 class="headings">Data Source</h1>
+    <h2 class="subheadings">Pathway List</h2>
+
+    <div ng-controller="pathwayListController" class="myGrid">
+        <div id="grid1" ui-grid="gridOptions" ui-grid-selection class="grid"></div>
     </div>
 </div>
 

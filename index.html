@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html ng-app="cascade" ng-controller="viewSettingController as viewSetting">
+<head>
+    <title>Cascade rna-Seq Browser</title>
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css"/>
+
+    <script type="text/javascript" src="js/angular.min.js"></script>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.js"></script>
+    <script type="text/javascript" src="js/meny.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+</head>
+<body ng-style='{"background-color": viewSetting.backgroundColor}'>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#expr_radio").buttonset();
+        $("#cnv_radio").buttonset();
+        $("#splice_check").button();
+        $("#mutation_check").buttonset();
+        var meny = Meny.create({
+            menuElement: document.querySelector('.meny_wrapper'),
+            contentsElement: document.querySelector('.main_wrapper'),
+            position: Meny.getQuery().p || 'left',
+            height: 200,
+            width: 2 * 260,
+            threshold: 40 //mouse distance
+        });
+        if (Meny.getQuery().u && Meny.getQuery().u.match(/^http/gi)) {
+            var contents = document.querySelector('.main_wrapper');
+            contents.style.padding = '0px';
+            contents.innerHTML = '<div class="cover"></div><iframe src="' + Meny.getQuery().u + '" style="width: 100%; height: 100%; border: 0; position: absolute;"></iframe>';
+        }
+    });
+</script>
+<div class="meny-arrow"></div>
+<div class="meny_wrapper">
+    <div id="expr_radio" ng-controller="expressionController as expression">
+        <input name="expression_setting" type="radio" ng-model="expression.expression_type"
+               id="expr_off" value="0"><label for="expr_off">Off</label>
+
+        <input name="expression_setting" type="radio" ng-model="expression.expression_type"
+               id="expr_median" value="1"><label for="expr_median">Median</label>
+
+        <input name="expression_setting" type="radio" ng-model="expression.expression_type"
+               id="expr_ratio" value='2'><label for="expr_ratio">Ratio</label>
+    </div>
+
+    <div ng-controller="splicingController as splicing">
+        <input name="splicing_setting" type="checkbox" ng-model="splicing.splicing" id="splice_check"><label
+            for="splice_check">Splicing</label>
+    </div>
+    <div id='mutation_check' ng-controller="mutationController as mutation">
+        <input name="mutation" type="checkbox" ng-model="mutation.snp" id="novel_snp"><label
+            for="novel_snp">Novel SNPs</label>
+        <input name="mutation" type="checkbox" ng-model="mutation.damaging" id="known_dammage"><label
+            for="known_dammage">Damaging</label>
+        <input name="mutation" type="checkbox" ng-model="mutation.indel" id="novel_indel"><label
+            for="novel_indel">Novel Indels</label>
+    </div>
+
+    <div id="cnv_radio" ng-controller="cnvController as cnv">
+        <input name="cnv_setting" type="radio" ng-model="cnv.cnv"
+               id="cnv_off" value="0"><label for="cnv_off">Off</label>
+
+        <input name="cnv_setting" type="radio" ng-model="cnv.cnv"
+               id="cnv_abs" value="1"><label for="cnv_abs">Median</label>
+
+        <input name="cnv_setting" type="radio" ng-model="cnv.cnv"
+               id="cnv_rel" value='2'><label for="cnv_rel">Ratio</label>
+    </div>
+</div>
+
+<div class="main_wrapper">
+
+</div>
+</body>
+</html>

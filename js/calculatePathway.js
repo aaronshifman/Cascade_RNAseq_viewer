@@ -1,7 +1,6 @@
 function calculatePathwayPosition(genes, structure) {
     var leafs = getLeafs(genes);
     var toAdd = [];
-    var i = 0;
     var sep = 2 * Math.PI / leafs.length;
 
     if (structure[0].length === 1) {
@@ -12,6 +11,7 @@ function calculatePathwayPosition(genes, structure) {
         var ringLevel = getLevel(structure, leafs[i]);
         genes[leafs[i]].x = 100 * (ringLevel + 1) * Math.sin(sep * i);
         genes[leafs[i]].y = 100 * (ringLevel + 1) * Math.cos(sep * i);
+        genes[leafs[i]].z = 0;
         genes[leafs[i]].angle = sep * i;
         toAdd.push(genes[leafs[i]].parent);
     }
@@ -29,14 +29,15 @@ function calculatePathwayPosition(genes, structure) {
                 if ((genes[toAdd[j]].children.length === 1) && (genes[toAdd[j]].children[0] !== "")) {
                     angle = genes[genes[toAdd[j]].children[0]].angle
                 } else {
-                    var angles = []
+                    var angles = [];
                     for (var k = 0; k < genes[toAdd[j]].children.length; k++) {
                         angles.push(genes[genes[toAdd[j]].children[k]].angle);
                     }
                     angle = averageAngle(angles);
                 }
-                genes[toAdd[j]].x = (ringLevel + 1) * 100 * Math.sin(angle)
-                genes[toAdd[j]].y = (ringLevel + 1) * 100 * Math.cos(angle)
+                genes[toAdd[j]].x = (ringLevel + 1) * 100 * Math.sin(angle);
+                genes[toAdd[j]].y = (ringLevel + 1) * 100 * Math.cos(angle);
+                genes[toAdd[j]].z = 0;
                 genes[toAdd[j]].angle = angle;
 
                 added.push(genes[toAdd[j]].name);
@@ -53,7 +54,7 @@ function calculatePathwayPosition(genes, structure) {
         });
         tempPars = [];
     }
-    console.log(genes)
+    return genes;
 }
 
 function getLeafs(genes) {

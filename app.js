@@ -1,21 +1,30 @@
-var xyz;
 (function () {
     var app = angular.module('cascade', ['ui.grid', 'ui.grid.selection']);
-    var loadedPathways = false;
 
-    app.controller('viewSettingController', function () {
-        this.backgroundColor = "#222222";
-        this.familyNodeColor = "#654321";
-        this.nodeColorLowFrequency = "#FFFFFF";
-        this.nodeColorMedFrequency = "#F778A1";
-        this.nodeColorHighFrequency = "#FF0000";
-        this.textSize = 10;
-        this.outlierColor = "#FF0000";
-        this.linkColor = "#FF0000";
-        this.nodeNameColor = "#66FFEE";
-        this.levelRingColor = "#FFFFFF";
-        this.medianThresholdParameter = 15;
-        this.nameColor = "#66FF66";
+    app.service('viewSettingsService', function () {
+        var settings = {
+            backgroundColor: "#222222",
+            familyNodeColor: "#654321",
+            nodeColorLowFrequency: "#FFFFFF",
+            nodeColorMedFrequency: "#F778A1",
+            nodeColorHighFrequency: "#FF0000",
+            textSize: 10,
+            outlierColor: "#FF0000",
+            linkColor: "#FF0000",
+            nodeNameColor: "#66FFEE",
+            levelRingColor: "#FFFFFF",
+            medianThresholdParameter: 15,
+            nameColor: "#66FF66",
+            ringsOn: true
+        };
+
+        var getSettings = function () {
+            return settings;
+        }
+        return {getSettings: getSettings};
+    })
+    app.controller('viewSettingController', function ($scope,viewSettingsService) {
+        $scope.settings = viewSettingsService.getSettings();
     });
 
     app.controller("expressionController", function () {
@@ -33,7 +42,8 @@ var xyz;
     app.controller("cnvController", function () {
         this.cnv = 2; //off, absolute, relative
     });
-    app.controller('pathwayListController', ['$scope', '$http', 'uiGridConstants', function ($scope, $http, uiGridConstants) {
+    app.controller('pathwayListController', ['$scope', '$http', 'uiGridConstants','viewSettingsService', function ($scope, $http, uiGridConstants,viewSettingsService) {
+        var settings = viewSettingsService.getSettings();
         $scope.columns = [{field: 'pathway_id', enableHiding: false, name: 'Id', visible: false}, {
             field: 'pathway_name', enableHiding: false, name: 'Name'
         }, {field: 'type', enableHiding: false, name: 'Type'}];
@@ -49,11 +59,14 @@ var xyz;
                 gridApi.selection.on.rowSelectionChanged($scope, function (row) {
                     $http.get("load_pathway.php?path=" + row.entity[0]).then(function (response) {
                         var pathway = parsePathway(response.data);
-                        calculatePathwayPosition(pathway.genes, pathway.structure);
+                        pathway.genes = calculatePathwayPosition(pathway.genes, pathway.structure);
                         var setup = initScene();
-                        setup.scene = drawLevels(setup.scene,pathway.structure.length);
-                        setup.scene = drawNodes(setup.scene,pathway.genes,pathway.structure);
-                        prepareAnimation(setup.scene,setup.camera,setup.renderer); //save scene camera and renderer as globals
+                        if(settings.ringsOn)
+                            setup.scene = drawLevels(setup.scene, pathway.structure.length,settings);
+                        setup.scene = drawNodes(setup.scene, pathway.genes,settings);
+                        setup.scene = drawNames(setup.scene, pathway.genes,settings);
+
+                        prepareAnimation(setup.scene, setup.camera, setup.renderer); //save scene camera and renderer as globals
                         animate();
                         render();
                     });

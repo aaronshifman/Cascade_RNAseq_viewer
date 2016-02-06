@@ -20,7 +20,6 @@ function parsePathway(data) {
     genes = findFamilyMembers(genes);
     genes = splitOutDuplicates(genes);
     var structure = structureGenes(genes);
-
     return {genes: genes, structure: structure};
 }
 function splitOutDuplicates(genes) {

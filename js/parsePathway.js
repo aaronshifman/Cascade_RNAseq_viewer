@@ -142,7 +142,7 @@ function structureGenes(genes) {
         for (var i = 0; i < levels[level].length; i++) {
             for (var j = 0; j < genes[levels[level][i]].children.length; j++) { // for all of the parent's children
                 if (genes[levels[level][i]].children[j] !== "") {
-                    genes[genes[levels[level][i]].children[j]].parent = parent;
+                    genes[genes[levels[level][i]].children[j]].parent = levels[level][i];
                     levels[level + 1].push(genes[levels[level][i]].children[j]); // the level object is a pointer to the origional node object
                     addedNode = true;
                 }

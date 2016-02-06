@@ -6,14 +6,21 @@
     <link rel="stylesheet" type="text/css" href="css/ui-grid.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/app.css"/>
 
+    <script type="text/javascript" src="js/mathHelpers.js"></script>
+
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/jquery-ui.js"></script>
+    <script type="text/javascript" src="js/three.js"></script>
+    <script type="text/javascript" src="js/ThreeJS.Detector.js"></script>
+    <script type="text/javascript" src="js/ThreeJS.helvetiker.js"></script>
+    <script type="text/javascript" src="js/ThreeJS.OrbitControlls.js"></script>
+    <script type="text/javascript" src="js/ThreeJS.WindowResize.js"></script>
     <script type="text/javascript" src="js/angular.min.js"></script>
     <script type="text/javascript" src="js/meny.js"></script>
     <script type="text/javascript" src="js/dataTables.js"></script>
     <script type="text/javascript" src="js/ui-grid.min.js"></script>
     <script type="text/javascript" src="js/parsePathway.js"></script>
-    <script type="text/javascript" src="js/renderPathway.js"></script>
+    <script type="text/javascript" src="js/calculatePathway.js"></script>
     <script type="text/javascript" src="app.js"></script>
 
 
@@ -39,6 +46,9 @@
             contents.style.padding = '0px';
             contents.innerHTML = '<div class="cover"></div><iframe src="' + Meny.getQuery().u + '" style="width: 100%; height: 100%; border: 0; position: absolute;"></iframe>';
         }
+
+        var canvas1 = document.createElement('canvas');
+        var context1 = canvas1.getContext('2d');
     });
 </script>
 <div class="meny-arrow"></div>

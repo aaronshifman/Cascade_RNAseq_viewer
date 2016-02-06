@@ -46,8 +46,9 @@
             onRegisterApi: function (gridApi) {
                 $scope.gridApi = gridApi;
                 gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-                    $http.get("load_pathway.php?path="+row.entity[0]).then(function (response) {
-                       parsePathway(response.data);
+                    $http.get("load_pathway.php?path=" + row.entity[0]).then(function (response) {
+                        var pathway = parsePathway(response.data);
+                        renderPathway(pathway.genes, pathway.structure);
                     });
                 });
             }

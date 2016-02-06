@@ -1,3 +1,4 @@
+var xyz;
 (function () {
     var app = angular.module('cascade', ['ui.grid', 'ui.grid.selection']);
     var loadedPathways = false;
@@ -49,6 +50,12 @@
                     $http.get("load_pathway.php?path=" + row.entity[0]).then(function (response) {
                         var pathway = parsePathway(response.data);
                         calculatePathwayPosition(pathway.genes, pathway.structure);
+                        var setup = initScene();
+                        setup.scene = drawLevels(setup.scene,pathway.structure.length);
+                        setup.scene = drawNodes(setup.scene,pathway.genes,pathway.structure);
+                        prepareAnimation(setup.scene,setup.camera,setup.renderer); //save scene camera and renderer as globals
+                        animate();
+                        render();
                     });
                 });
             }

@@ -61,11 +61,7 @@
                         var pathway = parsePathway(response.data);
                         pathway.genes = calculatePathwayPosition(pathway.genes, pathway.structure);
                         var setup = initScene();
-                        if(settings.ringsOn)
-                            setup.scene = drawLevels(setup.scene, pathway.structure.length,settings);
-                        setup.scene = drawNodes(setup.scene, pathway.genes,settings);
-                        setup.scene = drawNames(setup.scene, pathway.genes,settings);
-
+                        setup.scene = drawScene(setup.scene,pathway.genes,pathway.structure,settings);
                         prepareAnimation(setup.scene, setup.camera, setup.renderer); //save scene camera and renderer as globals
                         animate();
                         render();

@@ -3,6 +3,7 @@ function renderPathway() {
 }
 
 var controls;
+var projector;
 function initScene() {
     var scene = new THREE.Scene();
     var SCREEN_WIDTH = window.innerWidth * 0.95, SCREEN_HEIGHT = window.innerHeight * 0.95;
@@ -58,37 +59,21 @@ function initScene() {
     light6.position.set(-1000, 0, 0);
     scene.add(light6);
 
-
-    var ambientLight = new THREE.AmbientLight(0x111111);
-    scene.add(ambientLight);
+    projector = new THREE.Projector();
     // initialize object to perform world/screen calculations
-    var projector = new THREE.Projector();
+    document.addEventListener('mousemove', onDocumentMouseMove, false);
     // when the mouse moves, call the given function
-
     /////// Gene Mouseovers /////////
-    // create a canvas element
-    var canvas1 = document.createElement('canvas');
-    var context1 = canvas1.getContext('2d');
-
-    context1.font = "Bold 20px Arial";
-    // canvas contents will be used for a texture
-    var texture1 = new THREE.Texture(canvas1);
-    texture1.needsUpdate = true;
-    ///////////////////////////////////////
-
-    var spriteMaterial = new THREE.SpriteMaterial({
-        map: texture1,
-        useScreenCoordinates: true,
-        alignment: THREE.SpriteAlignment.topLeft
-    });
-    var sprite1 = new THREE.Sprite(spriteMaterial);
-    sprite1.scale.set(200, 100, 1.0);
-    sprite1.position.set(50, 50, 0);
-    scene.add(sprite1);
     return {renderer: renderer, scene: scene, camera: camera};
 }
 
-function drawLevels(scene, numLevels,settings) {
+var mouse = new THREE.Vector2();
+function onDocumentMouseMove(evtent) {
+    mouse.x = ( event.clientX / (window.innerWidth * .95) ) * 2 - 1;
+    mouse.y = -( event.clientY / (window.innerHeight * .95) ) * 2 + 1;
+}
+
+function drawLevels(scene, numLevels, settings) {
     var segmentSize = 360 / 100; //degree for segment
     for (var i = 0; i <= numLevels; i++) {
         var resolution = 100 * i;  //100 segments in circle
@@ -101,7 +86,7 @@ function drawLevels(scene, numLevels,settings) {
         });
         for (var j = 0; j <= resolution; j++) {
             var segment = (j * segmentSize) * Math.PI / 180;
-            geometry.vertices.push(new THREE.Vertex(new THREE.Vector3(Math.cos(segment) * radius, 0, Math.sin(segment) * radius)));
+            geometry.vertices.push(new THREE.Vector3(Math.cos(segment) * radius, 0, Math.sin(segment) * radius));
         }
         var line = new THREE.Line(geometry, material);
         scene.add(line);
@@ -113,8 +98,29 @@ function drawLevels(scene, numLevels,settings) {
 function animate() {
     requestAnimationFrame(animate);
     render();
-    controls.update();
+    update();
+}
+var INTERSECTED;
+function update() {
+    var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
+    projector.unprojectVector(vector, camera);
+    var ray = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
+    var intersects = ray.intersectObjects(scene.children);
 
+    if (intersects.length > 0) {
+        if ((intersects[0].object != INTERSECTED) && (intersects[0].object.type === "node")) {
+            if (INTERSECTED)
+                INTERSECTED.material.color.setHex(INTERSECTED.currentHex);
+            INTERSECTED = intersects[0].object;
+            INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
+            INTERSECTED.material.color.setHex(0xffff00);
+        }
+    } else {
+        if (INTERSECTED)
+            INTERSECTED.material.color.setHex(INTERSECTED.currentHex);
+        INTERSECTED = null;
+    }
+    controls.update();
 }
 function render() {
     renderer.render(scene, camera);
@@ -127,12 +133,17 @@ function render() {
 function drawNodes(scene, genes, settings) {
     for (var gene in genes) {
         var geometry = new THREE.SphereGeometry(10, 10, 10);
-        var material = new THREE.MeshBasicMaterial({color: settings.nodeColorLowFrequency});
+        if (genes[gene].familyNode)
+            var material = new THREE.MeshBasicMaterial({color: settings.familyNodeColor});
+        else
+            var material = new THREE.MeshBasicMaterial({color: settings.nodeColorLowFrequency});
         var node = new THREE.Mesh(geometry, material);
         console.log([gene, genes[gene].x, genes[gene].y, genes[gene].z])
         node.position.z = genes[gene].x;
         node.position.x = genes[gene].y;
         node.position.y = genes[gene].z;
+        node.type = "node"
+        node.masterGene = genes[gene].masterGene
         scene.add(node);
     }
     return scene;
@@ -155,6 +166,30 @@ function drawNames(scene, genes, settings) {
     return scene;
 }
 
+function drawLinks(scene, genes, settings) {
+    var material = new THREE.LineBasicMaterial({
+        transparent: true,
+        color: settings.linkColor,
+    });
+    for (var gene in genes) {
+        for (var i = 0; i < genes[gene].children.length; i++) {
+            if (genes[gene].children[i] !== "") {
+                var geometry = new THREE.Geometry();
+                var z = genes[gene].x
+                var x = genes[gene].y
+                var y = genes[gene].z
+                geometry.vertices.push(new THREE.Vector3(x, y, z));
+                z = genes[genes[gene].children[i]].x;
+                x = genes[genes[gene].children[i]].y;
+                y = genes[genes[gene].children[i]].z;
+                geometry.vertices.push(new THREE.Vector3(x, y, z));
+                var line = new THREE.Line(geometry, material);
+                scene.add(line);
+            }
+        }
+    }
+    return scene;
+}
 var scene;
 var camera;
 var renderer;
@@ -162,4 +197,12 @@ function prepareAnimation(scene_val, camera_val, renderer_val) {
     scene = scene_val;
     camera = camera_val;
     renderer = renderer_val;
+}
+function drawScene(scene, genes, structure, settings) {
+    if (settings.ringsOn)
+        scene = drawLevels(scene, structure.length, settings);
+    scene = drawNodes(scene, genes, settings);
+    scene = drawNames(scene, genes, settings);
+    scene = drawLinks(scene, genes, settings);
+    return scene
 }

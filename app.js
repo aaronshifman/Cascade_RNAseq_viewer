@@ -23,6 +23,18 @@
         }
         return {getSettings: getSettings};
     })
+    app.service('pathwayStateService',function(){
+       var pathwaySelected = null;
+       
+       var getPathwayState = function(){
+           return pathwaySelected;
+       };
+       
+       var setPathwayState = function(pathway){
+           pathwaySelected = pathway;
+       }
+       return {getPathwayState:getPathwayState, setPathwayState:setPathwayState};
+    });
     app.controller('viewSettingController', function ($scope,viewSettingsService) {
         $scope.settings = viewSettingsService.getSettings();
     });
@@ -42,7 +54,7 @@
     app.controller("cnvController", function () {
         this.cnv = 2; //off, absolute, relative
     });
-    app.controller('pathwayListController', ['$scope', '$http', 'uiGridConstants','viewSettingsService', function ($scope, $http, uiGridConstants,viewSettingsService) {
+    app.controller('pathwayListController', ['$scope', '$http', 'uiGridConstants','viewSettingsService','pathwayStateService', function ($scope, $http, uiGridConstants,viewSettingsService,pathwayStateService) {
         var settings = viewSettingsService.getSettings();
         $scope.columns = [{field: 'pathway_id', enableHiding: false, name: 'Id', visible: false}, {
             field: 'pathway_name', enableHiding: false, name: 'Name'
@@ -57,6 +69,7 @@
             onRegisterApi: function (gridApi) {
                 $scope.gridApi = gridApi;
                 gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+                    pathwayStateService.setPathwayState(row.entity[1]);
                     $http.get("load_pathway.php?path=" + row.entity[0]).then(function (response) {
                         var pathway = parsePathway(response.data);
                         pathway.genes = calculatePathwayPosition(pathway.genes, pathway.structure);
@@ -72,5 +85,34 @@
         $http.get("getPaths.php").then(function (response) {
             $scope.gridOptions.data = response.data;
         });
+    }]);
+    app.controller('dataListController', ['$scope', '$http', 'uiGridConstants','pathwayStateService', function ($scope, $http, uiGridConstants,pathwayStateService) {
+        $scope.columns = [{field: 'data_id', enableHiding: false, name: 'id', visible: false},
+        {field: 'name', enableHiding: false, name: 'name', visible: true}];
+        $scope.gridOptions = {
+            enableSorting: true,
+            columnDefs: $scope.columns,
+            enableFullRowSelection: true,
+            multiSelect: false,
+            enableRowHeaderSelection: false,
+            enableFiltering: true,
+            data:[
+                {data_id:"demo_", name:"Demo Data"},
+                {data_id:"tcga_AML_", name:"TCGA AML"},
+                {data_id:"Leu_ALL_", name:"Leucegene ALL"},
+                {data_id:"tcga_Prostate_", name:"TCGA Prostate Cancer"},
+                {data_id:"nature_2014", name:"Zhengyan 2014"},
+                {data_id:"LEU_AML", name:"Leucegene"}
+            ],
+            onRegisterApi: function (gridApi) {
+                $scope.gridApi = gridApi;
+                gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+                    console.log(row.entity.data_id);
+                });
+            }
+        };
+        $scope.show = function(){
+            return pathwayStateService.getPathwayState() !== null;
+        }
     }]);
 })();

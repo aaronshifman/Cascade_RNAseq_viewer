@@ -5,6 +5,7 @@
     <link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/ui-grid.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/app.css"/>
+    <link rel="stylesheet" type="text/css" href="css/meny.css"/>
 
     <script type="text/javascript" src="js/mathHelpers.js"></script>
 
@@ -47,9 +48,6 @@
             contents.style.padding = '0px';
             contents.innerHTML = '<div class="cover"></div><iframe src="' + Meny.getQuery().u + '" style="width: 100%; height: 100%; border: 0; position: absolute;"></iframe>';
         }
-
-        var canvas1 = document.createElement('canvas');
-        var context1 = canvas1.getContext('2d');
     });
 </script>
 <div class="meny-arrow"></div>
@@ -95,6 +93,10 @@
 
     <div ng-controller="pathwayListController" class="myGrid">
         <div id="grid1" ui-grid="gridOptions" ui-grid-selection class="grid"></div>
+    </div>
+    
+    <div ng-controller="dataListController" class="myGrid" ng-show="show()">
+        <div id="grid2" ui-grid="gridOptions" ui-grid-selection class="grid"></div>
     </div>
 </div>
 

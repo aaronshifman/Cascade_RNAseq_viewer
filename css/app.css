@@ -1,6 +1,7 @@
-.myGrid{
+.grid{
     width:400px;
-    height:100px;
+    max-height:200px;
+    margin-bottom:50px;
 }
 .subheadings{
     color: white;

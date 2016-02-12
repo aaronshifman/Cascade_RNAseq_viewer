@@ -73,8 +73,10 @@
                     $http.get("load_pathway.php?path=" + row.entity[0]).then(function (response) {
                         var pathway = parsePathway(response.data);
                         pathway.genes = calculatePathwayPosition(pathway.genes, pathway.structure);
+                        
+                        updateSettings(settings);
                         var setup = initScene();
-                        setup.scene = drawScene(setup.scene,pathway.genes,pathway.structure,settings);
+                        setup.scene = drawScene(setup.scene,pathway.genes,pathway.structure);
                         prepareAnimation(setup.scene, setup.camera, setup.renderer); //save scene camera and renderer as globals
                         animate();
                         render();

@@ -15,9 +15,20 @@ function parsePathway(data) {
         genes[gene[0].split(":")[0]].type = gene.slice(gene.length - 1);
         genes[gene[0].split(":")[0]].masterGene = gene[0].split(":")[0];
         genes[gene[0].split(":")[0]].name = gene[0];
+        genes[gene[0].split(":")[0]].familyNode = false;
+        genes[gene[0].split(":")[0]].family = [];
+        if(gene[0].split(":").length > 1){
+            genes[gene[0].split(":")[0]].familyNode = true;
+            
+            var fam = gene[0].split(":")[1];
+            fam = fam.slice(2,fam.length-1).split("|")
+            for(var j = 0; j<fam.length; j++){
+                genes[gene[0].split(":")[0]].family.push(fam[j]);
+            }
+        }
     }
+    console.log(jQuery.extend(true,{},genes));
     xyz = genes;
-    genes = findFamilyMembers(genes);
     genes = splitOutDuplicates(genes);
     var structure = structureGenes(genes);
     return {genes: genes, structure: structure};
@@ -75,37 +86,10 @@ function splitOutDuplicates(genes) {
 
 }
 
-function findFamilyMembers(genes) {
-    var famMembers = [];
-    var famOwners = [];
-    for (var gene in genes) {
-        if (genes[gene].name.split(":").length > 1) {
-            famOwners.push(genes[gene].name.split(":")[0])
-            var family = genes[gene].name.split(":")[1]
-            family = family.slice(2, family.length - 1).split("|");
-            for (var i = 0; i < family.length; i++) {
-                famMembers.push(family[i]);
-            }
-        }
-    }
-    for (var gene in genes) {
-        if (jQuery.inArray(genes[gene].name, famMembers) > -1) {
-            genes[gene].familyMember = true;
-        } else {
-            genes[gene].familyMember = false;
-        }
-        if (jQuery.inArray(genes[gene].name.split(":")[0], famOwners) > -1) {
-            genes[gene].familyNode = true;
-        } else {
-            genes[gene].familyNode = false;
-        }
-    }
-    return genes;
-}
 function getAllChildren(genes) {
     var children = [];
     for (var gene in genes) {
-        if (genes[gene].children[0].length > 0) {
+        if (!genes[gene].familyMember&&(genes[gene].children[0].length > 0)) {
             children = children.concat(genes[gene].children); // list all children
         }
     }
@@ -122,15 +106,17 @@ function removeDuplicates(array) {
 function structureGenes(genes) {
     var topGenes = [];
     for (var gene in genes) {
-        var topLevel = true;
-        for (var nodeSearch in genes) {
-            if (jQuery.inArray(gene.split(':')[0], genes[nodeSearch].children) > -1) { //if the node is another's child
-                topLevel = false;
-                break;
+        if(!genes[gene].familyMember){
+            var topLevel = true;
+            for (var nodeSearch in genes) {
+                if (jQuery.inArray(gene.split(':')[0], genes[nodeSearch].children) > -1) { //if the node is another's child
+                    topLevel = false;
+                    break;
+                }
             }
+            if (topLevel)
+                topGenes.push(gene);
         }
-        if (topLevel)
-            topGenes.push(gene);
     }
     var level = 0;
     var levels = [[]];

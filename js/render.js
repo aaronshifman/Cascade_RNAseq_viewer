@@ -1,7 +1,3 @@
-function renderPathway() {
-
-}
-
 var controls;
 var projector;
 function initScene() {
@@ -22,6 +18,7 @@ function initScene() {
     // create a div element to contain the renderer
     var container = document.createElement('div');
     document.body.appendChild(container);
+
     // attach renderer to the container div
     container.appendChild(renderer.domElement);
     //THREEx.WindowResize(renderer, camera);
@@ -62,6 +59,7 @@ function initScene() {
     projector = new THREE.Projector();
     // initialize object to perform world/screen calculations
     document.addEventListener('mousemove', onDocumentMouseMove, false);
+    document.addEventListener('click', onDocumentMouseClick, false);
     // when the mouse moves, call the given function
     /////// Gene Mouseovers /////////
     return {renderer: renderer, scene: scene, camera: camera};
@@ -73,7 +71,14 @@ function onDocumentMouseMove(evtent) {
     mouse.y = -( event.clientY / (window.innerHeight * .95) ) * 2 + 1;
 }
 
-function drawLevels(scene, numLevels, settings) {
+function onDocumentMouseClick(event){
+    try{
+        if (INTERSECTED.familyNode) {
+            handleFamilyNodes();
+        }
+    }catch(err){}
+}
+function drawLevels(scene, numLevels) {
     var segmentSize = 360 / 100; //degree for segment
     for (var i = 0; i <= numLevels; i++) {
         var resolution = 100 * i;  //100 segments in circle
@@ -130,7 +135,7 @@ function render() {
         }
     }
 }
-function drawNodes(scene, genes, settings) {
+function drawNodes(scene, genes) {
     for (var gene in genes) {
         var geometry = new THREE.SphereGeometry(10, 10, 10);
         if (genes[gene].familyNode)
@@ -138,18 +143,20 @@ function drawNodes(scene, genes, settings) {
         else
             var material = new THREE.MeshBasicMaterial({color: settings.nodeColorLowFrequency});
         var node = new THREE.Mesh(geometry, material);
-        console.log([gene, genes[gene].x, genes[gene].y, genes[gene].z])
         node.position.z = genes[gene].x;
         node.position.x = genes[gene].y;
         node.position.y = genes[gene].z;
         node.type = "node"
-        node.masterGene = genes[gene].masterGene
+        node.masterGene = genes[gene].masterGene;
+        node.familyNode = genes[gene].familyNode;
+        node.gene = gene;
+        node.family = genes[gene].family;
+        node.open = false;
         scene.add(node);
     }
     return scene;
 }
-
-function drawNames(scene, genes, settings) {
+function drawNames(scene, genes) {
     for (var gene in genes) {
         var text = THREE.FontUtils.generateShapes(genes[gene].masterGene, {
             font: "helvetiker",
@@ -161,12 +168,13 @@ function drawNames(scene, genes, settings) {
         });
         var name = new THREE.Mesh(geom, mat);
         name.position.set(genes[gene].y + 10, genes[gene].z + 10, genes[gene].x + 10);
+        name.type = "name"
         scene.add(name);
     }
     return scene;
 }
 
-function drawLinks(scene, genes, settings) {
+function drawLinks(scene, genes) {
     var material = new THREE.LineBasicMaterial({
         transparent: true,
         color: settings.linkColor,
@@ -184,6 +192,7 @@ function drawLinks(scene, genes, settings) {
                 y = genes[genes[gene].children[i]].z;
                 geometry.vertices.push(new THREE.Vector3(x, y, z));
                 var line = new THREE.Line(geometry, material);
+                line.type = "link"
                 scene.add(line);
             }
         }
@@ -198,11 +207,90 @@ function prepareAnimation(scene_val, camera_val, renderer_val) {
     camera = camera_val;
     renderer = renderer_val;
 }
-function drawScene(scene, genes, structure, settings) {
+function drawScene(scene, genes, structure) {
     if (settings.ringsOn)
         scene = drawLevels(scene, structure.length, settings);
-    scene = drawNodes(scene, genes, settings);
-    scene = drawNames(scene, genes, settings);
-    scene = drawLinks(scene, genes, settings);
+    scene = drawNodes(scene, genes);
+    scene = drawNames(scene, genes);
+    scene = drawLinks(scene, genes);
     return scene
+}
+
+//TODO: make nodes perpendicular to central axis
+function handleFamilyNodes(){
+    if(!INTERSECTED.open){
+        INTERSECTED.open = true;
+        var famSep = 50;
+        var z_offset = 100;
+        if (INTERSECTED.family.length == 1)
+            var startOffset = 0;
+        else
+            var startOffset = -famSep * Math.floor(INTERSECTED.family.length / 2)
+        for (var i = 0; i < INTERSECTED.family.length; i++) {
+            var x = INTERSECTED.position.z + startOffset
+            var y = INTERSECTED.position.x
+            startOffset = startOffset + famSep
+            drawFamilyNodes(x, y, z_offset, INTERSECTED.gene);
+            drawFamilyNames(x, y, z_offset, INTERSECTED.family[i], INTERSECTED.gene);
+            drawFamilyLinks(INTERSECTED.position.z, INTERSECTED.position.x, 0, x, y, z_offset, INTERSECTED.gene);
+        }
+    }else{
+        INTERSECTED.open = false;
+        targets = [];
+        for(var i = 0; i<scene.children.length;i++){
+            if(((scene.children[i].type=="node")||(scene.children[i].type=="name")||(scene.children[i].type=="link"))&&(scene.children[i].familyOwner===INTERSECTED.gene)){
+                targets.push(scene.children[i])
+            }
+        }
+        for(var i = 0; i<targets.length;i++){
+            scene.remove(targets[i]);
+        }
+    }
+}
+function drawFamilyNodes(x,y,z,owner){
+    console.log([x,y,z]);
+    var geometry = new THREE.SphereGeometry(10, 10, 10);
+    var material = new THREE.MeshBasicMaterial({color: settings.nodeColorLowFrequency});
+    var node = new THREE.Mesh(geometry, material);
+    node.position.z = x;
+    node.position.x = y;
+    node.position.y = z;
+    node.type = "node"
+    node.familyMember = true;
+    node.familyOwner = owner;
+    scene.add(node);
+}
+function drawFamilyNames(x,y,z,name,owner){
+    var text = THREE.FontUtils.generateShapes(name, {
+            font: "helvetiker",
+            size: settings.textSize
+        });
+        var geom = new THREE.ShapeGeometry(text);
+        var mat = new THREE.MeshBasicMaterial({
+            color: settings.nameColor
+        });
+        var name = new THREE.Mesh(geom, mat);
+        name.position.set(y + 10, z + 10, x + 10);
+        name.type = "name";
+        name.familyOwner = owner;
+        scene.add(name);
+}
+function drawFamilyLinks(x0,y0,z0,x1,y1,z1,owner){
+    var material = new THREE.LineBasicMaterial({
+        transparent: true,
+        color: settings.linkColor
+    });
+    var geometry = new THREE.Geometry();
+    var z = x0;
+    var x = y0;
+    var y = z0;
+    geometry.vertices.push(new THREE.Vector3(x, y, z));
+    z = x1;
+    x = y1;
+    y = z1;
+    geometry.vertices.push(new THREE.Vector3(x, y, z));
+    var line = new THREE.Line(geometry, material);
+    line.type = "link";
+    line.familyOwner = owner;
+    scene.add(line);
 }

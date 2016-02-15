@@ -1,4 +1,5 @@
 logs/*
+/connection.php
 !.gitkeep
 node_modules/
 bower_components/

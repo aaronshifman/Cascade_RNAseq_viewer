@@ -23,7 +23,7 @@
     <script type="text/javascript" src="js/ui-grid.min.js"></script>
     <script type="text/javascript" src="js/parsePathway.js"></script>
     <script type="text/javascript" src="js/calculatePathway.js"></script>
-    <script type="text/javascript" src="js/controllHelpers"></script>
+    <script type="text/javascript" src="js/controllHelpers.js"></script>
     <script type="text/javascript" src="app.js"></script>
 
 
@@ -49,6 +49,12 @@
             contents.style.padding = '0px';
             contents.innerHTML = '<div class="cover"></div><iframe src="' + Meny.getQuery().u + '" style="width: 100%; height: 100%; border: 0; position: absolute;"></iframe>';
         }
+        meny.addEventListener("open",function(){
+            controls = undefined;
+        });
+        meny.addEventListener("close",function(){
+            controls = new THREE.OrbitControls(camera);
+        });
     });
 </script>
 <div class="meny-arrow"></div>

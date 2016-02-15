@@ -16,6 +16,10 @@ function initScene() {
     renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     //renderer.setClearColorHex(0x222222, 1);
     // create a div element to contain the renderer
+
+    if($("canvas").length>0){
+        $("canvas").parent().remove();
+    }
     var container = document.createElement('div');
     document.body.appendChild(container);
 
@@ -125,7 +129,9 @@ function update() {
             INTERSECTED.material.color.setHex(INTERSECTED.currentHex);
         INTERSECTED = null;
     }
-    controls.update();
+    if(controls !== undefined){
+        controls.update()
+    }
 }
 function render() {
     renderer.render(scene, camera);
@@ -262,18 +268,18 @@ function drawFamilyNodes(x,y,z,owner){
 }
 function drawFamilyNames(x,y,z,name,owner){
     var text = THREE.FontUtils.generateShapes(name, {
-            font: "helvetiker",
-            size: settings.textSize
-        });
-        var geom = new THREE.ShapeGeometry(text);
-        var mat = new THREE.MeshBasicMaterial({
-            color: settings.nameColor
-        });
-        var name = new THREE.Mesh(geom, mat);
-        name.position.set(y + 10, z + 10, x + 10);
-        name.type = "name";
-        name.familyOwner = owner;
-        scene.add(name);
+        font: "helvetiker",
+        size: settings.textSize
+    });
+    var geom = new THREE.ShapeGeometry(text);
+    var mat = new THREE.MeshBasicMaterial({
+        color: settings.nameColor
+    });
+    var name = new THREE.Mesh(geom, mat);
+    name.position.set(y + 10, z + 10, x + 10);
+    name.type = "name";
+    name.familyOwner = owner;
+    scene.add(name);
 }
 function drawFamilyLinks(x0,y0,z0,x1,y1,z1,owner){
     var material = new THREE.LineBasicMaterial({

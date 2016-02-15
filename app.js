@@ -24,16 +24,16 @@
         return {getSettings: getSettings};
     })
     app.service('pathwayStateService',function(){
-       var pathwaySelected = null;
-       
-       var getPathwayState = function(){
-           return pathwaySelected;
-       };
-       
-       var setPathwayState = function(pathway){
-           pathwaySelected = pathway;
-       }
-       return {getPathwayState:getPathwayState, setPathwayState:setPathwayState};
+        var pathwaySelected = null;
+
+        var getPathwayState = function(){
+            return pathwaySelected;
+        };
+
+        var setPathwayState = function(pathway){
+            pathwaySelected = pathway;
+        }
+        return {getPathwayState:getPathwayState, setPathwayState:setPathwayState};
     });
     app.controller('viewSettingController', function ($scope,viewSettingsService) {
         $scope.settings = viewSettingsService.getSettings();
@@ -73,7 +73,7 @@
                     $http.get("load_pathway.php?path=" + row.entity[0]).then(function (response) {
                         var pathway = parsePathway(response.data);
                         pathway.genes = calculatePathwayPosition(pathway.genes, pathway.structure);
-                        
+
                         updateSettings(settings);
                         var setup = initScene();
                         setup.scene = drawScene(setup.scene,pathway.genes,pathway.structure);
@@ -90,7 +90,7 @@
     }]);
     app.controller('dataListController', ['$scope', '$http', 'uiGridConstants','pathwayStateService', function ($scope, $http, uiGridConstants,pathwayStateService) {
         $scope.columns = [{field: 'data_id', enableHiding: false, name: 'id', visible: false},
-        {field: 'name', enableHiding: false, name: 'name', visible: true}];
+            {field: 'name', enableHiding: false, name: 'name', visible: true}];
         $scope.gridOptions = {
             enableSorting: true,
             columnDefs: $scope.columns,
@@ -109,7 +109,24 @@
             onRegisterApi: function (gridApi) {
                 $scope.gridApi = gridApi;
                 gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-                    console.log(row.entity.data_id);
+                    var genes = [];
+                    for(var i = 0; i<scene.children.length;i++){
+                        if(scene.children[i].type === 'node')
+                            genes.push(scene.children[i].masterGene);
+                    }
+                    var data = $.param({
+                        json:JSON.stringify({
+                            source:row.entity.data_id,
+                            genes:removeDuplicates(genes)
+                        })
+                    });
+                    var config = {
+                        headers : {
+                            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+                        }
+                    };
+                    $http.post('load_data.php',data,config).then(function(response){
+                    });
                 });
             }
         };

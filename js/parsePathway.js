@@ -96,13 +96,6 @@ function getAllChildren(genes) {
     return children
 }
 
-function removeDuplicates(array) {
-    for (var i = 1; i < array.length;) {
-        (array[i - 1] == array[i]) ? array.splice(i, 1) : i++;
-    }
-    return array;
-}
-
 function structureGenes(genes) {
     var topGenes = [];
     for (var gene in genes) {

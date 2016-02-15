@@ -126,6 +126,7 @@
                         }
                     };
                     $http.post('load_data.php',data,config).then(function(response){
+                        drawData(response.data);
                     });
                 });
             }

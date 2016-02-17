@@ -8,6 +8,10 @@
             nodeColorLowFrequency: "#FFFFFF",
             nodeColorMedFrequency: "#F778A1",
             nodeColorHighFrequency: "#FF0000",
+            nodeLowFrequencyValue: 0.1,
+            nodeHighFrequencyValue: 0.5,
+            altLowFrequencyValue: 0.1,
+            altHighFrequencyValue: 0.5,
             textSize: 10,
             outlierColor: "#FF0000",
             linkColor: "#FF0000",
@@ -126,6 +130,7 @@
                         }
                     };
                     $http.post('load_data.php',data,config).then(function(response){
+                        console.log(response.data);
                         drawData(response.data);
                     });
                 });

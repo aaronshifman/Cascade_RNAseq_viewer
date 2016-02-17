@@ -50,5 +50,19 @@ foreach ($stmt as $row) {
         }
     }
 }
+
+$sql = "select * from " . $data['source'] . "altsplice where Gene IN('$in')";
+$stmt = $pdo->prepare($sql);
+$stmt->execute();
+
+foreach ($stmt as $row) {
+    $keys = array_keys($row);
+    for ($i = 4; $i < count($keys); $i += 2) {
+        $patient = $keys[$i];
+        $gene = $row[$keys[2]];
+        $patients[$keys[$i]][$gene]['altsplice'] = 0;
+        $patients[$keys[$i]][$gene]['altsplice'] = $row[$patient];
+    }
+}
 echo json_encode($patients);
 ?>

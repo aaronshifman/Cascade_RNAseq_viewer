@@ -31,12 +31,36 @@
 </head>
 <body ng-style='{"background-color": settings.backgroundColor}'>
 <script type="text/javascript">
+    var displaySettings
     $(document).ready(function () {
         $("#expr_radio").buttonset();
         $("#cnv_radio").buttonset();
         $("#splice_check").button();
         $("#mutation_check").buttonset();
-
+        
+        displaySettings = {
+            expression:1, //0,1,2
+            splicing:true,
+            snp:true,
+            damaging:false,
+            indel:true,
+            cnv:1//0,1,2
+        };
+        $("#novel_snp").change(function(){
+            displaySettings.snp = $(this).is(":checked");
+        })
+        $("#known_dammage").change(function(){
+            displaySettings.damaging = $(this).is(":checked");
+        })
+        $("#novel_indel").change(function(){
+            displaySettings.indel = $(this).is(":checked");
+        })
+        $("[name='cnv_setting']").change(function(){
+            displaySettings.cnv = parseInt(this.value);
+        })
+        $("[name='expression_setting']").change(function(){
+            displaySettings.expression = parseInt(this.value);
+        })
         var meny = Meny.create({
             menuElement: document.querySelector('.meny_wrapper'),
             contentsElement: document.querySelector('.main_wrapper'),
@@ -60,40 +84,39 @@
 </script>
 <div class="meny-arrow"></div>
 <div class="meny_wrapper">
-
     <h1 class="headings">Visualization Parameters</h1>
 
-    <div id="expr_radio" ng-controller="expressionController as expression">
-        <input name="expression_setting" type="radio" ng-model="expression.expression_type"
+    <div id="expr_radio">
+        <input name="expression_setting" type="radio"
                id="expr_off" value="0"><label for="expr_off">Off</label>
 
-        <input name="expression_setting" type="radio" ng-model="expression.expression_type"
-               id="expr_median" value="1"><label for="expr_median">Median</label>
+        <input name="expression_setting" type="radio"
+               id="expr_median" value="1" checked><label for="expr_median">Median</label>
 
-        <input name="expression_setting" type="radio" ng-model="expression.expression_type"
+        <input name="expression_setting" type="radio"
                id="expr_ratio" value='2'><label for="expr_ratio">Ratio</label>
     </div>
-    <div ng-controller="splicingController as splicing">
-        <input name="splicing_setting" type="checkbox" ng-model="splicing.splicing" id="splice_check"><label
+    <div>
+        <input name="splicing_setting" type="checkbox" id="splice_check" checked><label
             for="splice_check">Splicing</label>
     </div>
-    <div id='mutation_check' ng-controller="mutationController as mutation">
-        <input name="mutation" type="checkbox" ng-model="mutation.snp" id="novel_snp"><label
+    <div id='mutation_check'>
+        <input name="mutation" type="checkbox" id="novel_snp" checked><label
             for="novel_snp">Novel SNPs</label>
-        <input name="mutation" type="checkbox" ng-model="mutation.damaging" id="known_dammage"><label
+        <input name="mutation" type="checkbox" id="known_dammage"><label
             for="known_dammage">Damaging</label>
-        <input name="mutation" type="checkbox" ng-model="mutation.indel" id="novel_indel"><label
+        <input name="mutation" type="checkbox" id="novel_indel" checked><label
             for="novel_indel">Novel Indels</label>
     </div>
-    <div id="cnv_radio" ng-controller="cnvController as cnv">
-        <input name="cnv_setting" type="radio" ng-model="cnv.cnv"
+    <div id="cnv_radio">
+        <input name="cnv_setting" type="radio"
                id="cnv_off" value="0"><label for="cnv_off">Off</label>
 
-        <input name="cnv_setting" type="radio" ng-model="cnv.cnv"
-               id="cnv_abs" value="1"><label for="cnv_abs">Median</label>
+        <input name="cnv_setting" type="radio"
+               id="cnv_abs" value="1" checked><label for="cnv_abs">Median</label>
 
-        <input name="cnv_setting" type="radio" ng-model="cnv.cnv"
-               id="cnv_rel" value='2'><label for="cnv_rel">Ratio</label>
+        <input name="cnv_setting" type="radio"
+               id="cnv_rel" value='2'><label for="cnv_rel">Relative</label>
     </div>
 
     <h1 class="headings">Data Source</h1>

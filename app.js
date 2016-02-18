@@ -42,22 +42,6 @@
     app.controller('viewSettingController', function ($scope,viewSettingsService) {
         $scope.settings = viewSettingsService.getSettings();
     });
-
-    app.controller("expressionController", function () {
-        this.expression_type = 1; //off, median, ratio
-    });
-
-    app.controller("splicingController", function () {
-        this.splicing = true;
-    });
-    app.controller("mutationController", function () {
-        this.snp = true;
-        this.damaging = false;
-        this.indel = true;
-    });
-    app.controller("cnvController", function () {
-        this.cnv = 2; //off, absolute, relative
-    });
     app.controller('pathwayListController', ['$scope', '$http', 'uiGridConstants','viewSettingsService','pathwayStateService', function ($scope, $http, uiGridConstants,viewSettingsService,pathwayStateService) {
         var settings = viewSettingsService.getSettings();
         $scope.columns = [{field: 'pathway_id', enableHiding: false, name: 'Id', visible: false}, {
